@@ -14,6 +14,8 @@ from contextlib import suppress
 from dataclasses import dataclass
 from typing import Any
 
+import random
+
 """
 TODO: reincorporate
 from django.core.exceptions import ValidationError
@@ -27,14 +29,19 @@ def indent(s: str) -> str:
     return "\n".join(padding + part for part in parts)
 
 def get_sample_data(data_type):
-    print(data_type)
     if hasattr(data_type, "sample_data"):
         return data_type.sample_data
     if data_type is int:
         return [42, 99]
     if data_type is str:
         return ["foo", "bar"]
-    return ["unsupported"]
+    if data_type is bool:
+        return [True, False]
+    if data_type is dict:
+        return [dict(anonymous="whatever")]
+    print(data_type)
+    print("unsupported")
+    import sys; sys.exit()
 
 @dataclass
 class DictType:
@@ -50,11 +57,19 @@ class DictType:
     ) -> None:
         self.required_keys = required_keys
         self.optional_keys = optional_keys
-        sample_data = dict()
+        self.sample_data = [dict()]
         for (key, data_type) in required_keys:
-            print(data_type)
-            sample_data[key] = get_sample_data(data_type)[0]
-        self.sample_data = [sample_data]
+            new_sample_data = []
+            for new_val in get_sample_data(data_type):
+                for old_sample in self.sample_data:
+                    new_item = dict()
+                    for k, v in old_sample.items():
+                        new_item[k] = v
+                    new_item[key] = new_val
+                    new_sample_data.append(new_item)
+            self.sample_data = new_sample_data
+            if len(self.sample_data) > 50:
+                self.sample_data = random.sample(self.sample_data, 50)
 
     def check_data(self, var_name: str, val: dict[str, Any]) -> None:
         if not isinstance(val, dict):
@@ -97,6 +112,9 @@ class EnumType:
 
     valid_vals: Sequence[Any]
 
+    def __init__(self, valid_vals):
+        self.sample_data = valid_vals
+
     def check_data(self, var_name: str, val: dict[str, Any]) -> None:
         if val not in self.valid_vals:
             raise AssertionError(f"{var_name} is not in {self.valid_vals}")
@@ -130,6 +148,9 @@ class NumberType:
     """A Union[float, int]; needed to align with the `number` type in
     OpenAPI, because isinstance(4, float) == False"""
 
+    def __init__(self):
+        self.sample_data = [100, 3.14]
+
     def check_data(self, var_name: str, val: Any | None) -> None:
         if isinstance(val, int | float):
             return
@@ -145,7 +166,7 @@ class ListType:
     def __init__(self, sub_type: Any, length: int | None = None) -> None:
         self.sub_type = sub_type
         self.length = length
-        self.sample_data = [[item, item] for item in get_sample_data(sub_type)]
+        self.sample_data = [[item, item, item] for item in get_sample_data(sub_type)]
 
     def check_data(self, var_name: str, val: list[Any]) -> None:
         if not isinstance(val, list):
@@ -166,6 +187,9 @@ class StringDictType:
 
     value_type: Any
 
+    def __init__(self, value_type):
+        self.sample_data = [dict(some_key=val) for val in get_sample_data(value_type)]
+
     def check_data(self, var_name: str, val: dict[Any, Any]) -> None:
         if not isinstance(val, dict):
             raise AssertionError(f"{var_name} is not a dictionary")
@@ -185,6 +209,9 @@ class StringDictType:
 class OptionalType:
     sub_type: Any
 
+    def __init__(self, sub_type):
+        self.sample_data = [None] + get_sample_data(sub_type)
+ 
     def check_data(self, var_name: str, val: Any | None) -> None:
         if val is None:
             return
@@ -202,6 +229,19 @@ class TupleType:
     the tuple has the sequence of sub_types."""
 
     sub_types: Sequence[Any]
+
+    def __init__(self, sub_types):
+        self.sample_data = [list()]
+        for data_type in sub_types:
+            new_sample_data = []
+            for new_val in get_sample_data(data_type):
+                for old_sample in self.sample_data:
+                    print("old_sample", old_sample)
+                    print("new_val", new_val)
+                    new_item = old_sample[:] + [new_val]
+                    new_sample_data.append(new_item)
+
+        self.sample_data = [tuple(lst) for lst in new_sample_data]
 
     def check_data(self, var_name: str, val: Any) -> None:
         if not isinstance(val, list | tuple):
@@ -224,6 +264,11 @@ class TupleType:
 @dataclass
 class UnionType:
     sub_types: Sequence[Any]
+
+    def __init__(self, sub_types):
+        self.sample_data = []
+        for sub_type in sub_types:
+            self.sample_data += get_sample_data(sub_type)
 
     def check_data(self, var_name: str, val: Any) -> None:
         for sub_type in self.sub_types:
@@ -248,6 +293,8 @@ class UnionType:
 
 
 class UrlType:
+    def __init__(self):
+        self.sample_data = ["http://example.com"]
     def check_data(self, var_name: str, val: Any) -> None:
         """ TODO
         try:
