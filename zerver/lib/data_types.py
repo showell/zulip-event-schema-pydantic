@@ -68,8 +68,8 @@ class DictType:
                     new_item[key] = new_val
                     new_sample_data.append(new_item)
             self.sample_data = new_sample_data
-            if len(self.sample_data) > 50:
-                self.sample_data = random.sample(self.sample_data, 50)
+            if len(self.sample_data) > 40:
+                self.sample_data = random.sample(self.sample_data, 40)
 
     def check_data(self, var_name: str, val: dict[str, Any]) -> None:
         if not isinstance(val, dict):
@@ -236,12 +236,12 @@ class TupleType:
             new_sample_data = []
             for new_val in get_sample_data(data_type):
                 for old_sample in self.sample_data:
-                    print("old_sample", old_sample)
-                    print("new_val", new_val)
                     new_item = old_sample[:] + [new_val]
                     new_sample_data.append(new_item)
 
         self.sample_data = [tuple(lst) for lst in new_sample_data]
+        if len(self.sample_data) > 40:
+            self.sample_data = random.sample(self.sample_data, 40)
 
     def check_data(self, var_name: str, val: Any) -> None:
         if not isinstance(val, list | tuple):
@@ -269,6 +269,8 @@ class UnionType:
         self.sample_data = []
         for sub_type in sub_types:
             self.sample_data += get_sample_data(sub_type)
+        if len(self.sample_data) > 40:
+            self.sample_data = random.sample(self.sample_data, 40)
 
     def check_data(self, var_name: str, val: Any) -> None:
         for sub_type in self.sub_types:

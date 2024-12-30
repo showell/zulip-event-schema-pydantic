@@ -1,7 +1,9 @@
 import zerver.lib.event_schema
 
-
-foo = zerver.lib.event_schema.alert_words_event
-
-print(foo.sample_data)
-print(foo.schema("alert_words"))
+module_dict = zerver.lib.event_schema.__dict__
+print("SAMPLE_DATA = [")
+for k in sorted(module_dict):
+    if k.endswith("_event") and not k.startswith("check_"):
+        v = module_dict[k].sample_data
+        print(f"    {k}={v},")
+print("]")
