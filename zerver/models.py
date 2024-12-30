@@ -3,11 +3,14 @@
 class Realm:
     pass
 
+
 class RealmUserDefault:
     pass
 
+
 class Stream:
     pass
+
 
 class UserProfile:
     ROLE_REALM_OWNER = 100

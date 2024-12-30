@@ -28,6 +28,7 @@ def indent(s: str) -> str:
     parts = s.split("\n")
     return "\n".join(padding + part for part in parts)
 
+
 def get_sample_data(data_type):
     if hasattr(data_type, "sample_data"):
         return data_type.sample_data
@@ -41,7 +42,10 @@ def get_sample_data(data_type):
         return [dict(anonymous="whatever")]
     print(data_type)
     print("unsupported")
-    import sys; sys.exit()
+    import sys
+
+    sys.exit()
+
 
 @dataclass
 class DictType:
@@ -58,7 +62,7 @@ class DictType:
         self.required_keys = required_keys
         self.optional_keys = optional_keys
         self.sample_data = [dict()]
-        for (key, data_type) in required_keys:
+        for key, data_type in required_keys:
             new_sample_data = []
             for new_val in get_sample_data(data_type):
                 for old_sample in self.sample_data:
@@ -211,7 +215,7 @@ class OptionalType:
 
     def __init__(self, sub_type):
         self.sample_data = [None] + get_sample_data(sub_type)
- 
+
     def check_data(self, var_name: str, val: Any | None) -> None:
         if val is None:
             return
@@ -256,7 +260,9 @@ class TupleType:
 
     def schema(self, var_name: str) -> str:
         sub_schemas = "\n".join(
-            sorted(schema(str(i), sub_type) for i, sub_type in enumerate(self.sub_types))
+            sorted(
+                schema(str(i), sub_type) for i, sub_type in enumerate(self.sub_types)
+            )
         )
         return f"{var_name} (tuple):\n{indent(sub_schemas)}"
 
@@ -297,8 +303,9 @@ class UnionType:
 class UrlType:
     def __init__(self):
         self.sample_data = ["http://example.com"]
+
     def check_data(self, var_name: str, val: Any) -> None:
-        """ TODO
+        """TODO
         try:
             URLValidator()(val)
         except ValidationError:  # nocoverage

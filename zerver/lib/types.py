@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass
 
+
 @dataclass
 class AnonymousSettingGroupDict:
     direct_members: list[int]
