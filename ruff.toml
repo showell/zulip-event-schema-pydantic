@@ -1,0 +1,2 @@
+exclude = ["lib", "test_data"]
+line-length = 100
