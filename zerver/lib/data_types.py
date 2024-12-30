@@ -26,6 +26,15 @@ def indent(s: str) -> str:
     parts = s.split("\n")
     return "\n".join(padding + part for part in parts)
 
+def get_sample_data(data_type):
+    print(data_type)
+    if hasattr(data_type, "sample_data"):
+        return data_type.sample_data
+    if data_type is int:
+        return [42, 99]
+    if data_type is str:
+        return ["foo", "bar"]
+    return ["unsupported"]
 
 @dataclass
 class DictType:
@@ -41,6 +50,11 @@ class DictType:
     ) -> None:
         self.required_keys = required_keys
         self.optional_keys = optional_keys
+        sample_data = dict()
+        for (key, data_type) in required_keys:
+            print(data_type)
+            sample_data[key] = get_sample_data(data_type)[0]
+        self.sample_data = [sample_data]
 
     def check_data(self, var_name: str, val: dict[str, Any]) -> None:
         if not isinstance(val, dict):
@@ -100,6 +114,7 @@ class Equals:
         # super hack for OpenAPI workaround
         if self.expected_value is None:
             self.equalsNone = True
+        self.sample_data = [expected_value]
 
     def check_data(self, var_name: str, val: dict[str, Any]) -> None:
         if val != self.expected_value:
@@ -130,6 +145,7 @@ class ListType:
     def __init__(self, sub_type: Any, length: int | None = None) -> None:
         self.sub_type = sub_type
         self.length = length
+        self.sample_data = [[item, item] for item in get_sample_data(sub_type)]
 
     def check_data(self, var_name: str, val: list[Any]) -> None:
         if not isinstance(val, list):
