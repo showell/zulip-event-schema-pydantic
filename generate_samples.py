@@ -1,1 +1,1 @@
-import event_schema
+import zerver.lib.event_schema

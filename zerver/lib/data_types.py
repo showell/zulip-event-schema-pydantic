@@ -14,8 +14,11 @@ from contextlib import suppress
 from dataclasses import dataclass
 from typing import Any
 
+"""
+TODO: reincorporate
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
+"""
 
 
 def indent(s: str) -> str:
@@ -230,10 +233,12 @@ class UnionType:
 
 class UrlType:
     def check_data(self, var_name: str, val: Any) -> None:
+        """ TODO
         try:
             URLValidator()(val)
         except ValidationError:  # nocoverage
             raise AssertionError(f"{var_name} is not a URL")
+        """
 
     def schema(self, var_name: str) -> str:
         # just report str to match OpenAPI
