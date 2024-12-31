@@ -10,7 +10,7 @@ from zerver.lib.types import AnonymousSettingGroupDict
 from zerver.models import Realm, RealmUserDefault, Stream, UserProfile
 
 
-from pydantic_schema import (
+from zerver.lib.event_types import (
     _allow_message_editing_data,
     _authentication_data,
     _bot_services_embedded_type,
