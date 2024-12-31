@@ -9,6 +9,25 @@ from zerver.lib.types import AnonymousSettingGroupDict
 from zerver.models import Realm, RealmUserDefault, Stream, UserProfile
 
 _check_delete_message = make_checker(delete_message_event)
+_check_has_zoom_token = make_checker(has_zoom_token_event)
+_check_presence = make_checker(presence_event)
+_check_realm_bot_add = make_checker(realm_bot_add_event)
+_check_realm_bot_update = make_checker(realm_bot_update_event)
+_check_realm_default_update = make_checker(realm_user_settings_defaults_update_event)
+_check_realm_emoji_update = make_checker(realm_emoji_update_event)
+_check_realm_export = make_checker(realm_export_event)
+_check_realm_update = make_checker(realm_update_event)
+_check_realm_update_dict = make_checker(realm_update_dict_event)
+_check_realm_user_update = make_checker(realm_user_update_event)
+_check_stream_update = make_checker(stream_update_event)
+_check_subscription_update = make_checker(subscription_update_event)
+_check_update_display_settings = make_checker(update_display_settings_event)
+_check_update_global_notifications = make_checker(update_global_notifications_event)
+_check_update_message = make_checker(update_message_event)
+_check_user_group_update = make_checker(user_group_update_event)
+_check_user_settings_update = make_checker(user_settings_update_event)
+_check_user_status = make_checker(user_status_event)
+
 
 def check_delete_message(
     var_name: str,
@@ -41,9 +60,6 @@ def check_delete_message(
     assert set(event.keys()) == keys
 
 
-_check_has_zoom_token = make_checker(has_zoom_token_event)
-
-
 def check_has_zoom_token(
     var_name: str,
     event: dict[str, object],
@@ -51,10 +67,6 @@ def check_has_zoom_token(
 ) -> None:
     _check_has_zoom_token(var_name, event)
     assert event["value"] == value
-
-
-_check_presence = make_checker(presence_event)
-
 
 def check_presence(
     var_name: str,
@@ -74,8 +86,6 @@ def check_presence(
     assert event_presence_key == presence_key
     assert event_presence_value["status"] == status
 
-
-_check_realm_bot_add = make_checker(realm_bot_add_event)
 
 def check_realm_bot_add(
     var_name: str,
@@ -98,7 +108,6 @@ def check_realm_bot_add(
     else:
         raise AssertionError(f"Unknown bot_type: {bot_type}")
 
-_check_realm_bot_update = make_checker(realm_bot_update_event)
 
 def check_realm_bot_update(
     # Check schema plus the field.
@@ -115,8 +124,6 @@ def check_realm_bot_update(
 
 
 
-_check_realm_emoji_update = make_checker(realm_emoji_update_event)
-
 def check_realm_emoji_update(var_name: str, event: dict[str, object]) -> None:
     """
     The way we send realm emojis is kinda clumsy--we
@@ -131,8 +138,6 @@ def check_realm_emoji_update(var_name: str, event: dict[str, object]) -> None:
     for k, v in event["realm_emoji"].items():
         assert v["id"] == k
 
-
-_check_realm_export = make_checker(realm_export_event)
 
 
 def check_realm_export(
@@ -158,7 +163,7 @@ def check_realm_export(
     assert has_failed_timestamp == (export["failed_timestamp"] is not None)
 
 
-_check_realm_update = make_checker(realm_update_event)
+
 
 
 def check_realm_update(
@@ -204,8 +209,6 @@ def check_realm_update(
         raise AssertionError(f"Unexpected property type {property_type}")
 
 
-_check_realm_default_update = make_checker(realm_user_settings_defaults_update_event)
-
 
 def check_realm_default_update(
     var_name: str,
@@ -221,8 +224,6 @@ def check_realm_default_update(
     prop_type = RealmUserDefault.property_types[prop]
     assert isinstance(event["value"], prop_type)
 
-
-_check_realm_update_dict = make_checker(realm_update_dict_event)
 
 def check_realm_update_dict(
     # handle union types
@@ -261,8 +262,6 @@ def check_realm_update_dict(
     check_data(sub_type, f"{var_name}['data']", event["data"])
 
 
-_check_realm_user_update = make_checker(realm_user_update_event)
-
 def check_realm_user_update(
     # person_flavor tells us which extra fields we need
     var_name: str,
@@ -278,7 +277,6 @@ def check_realm_user_update(
     )
 
 
-_check_stream_update = make_checker(stream_update_event)
 
 def check_stream_update(
     var_name: str,
@@ -328,9 +326,6 @@ def check_stream_update(
         raise AssertionError(f"Unknown property: {prop}")
 
 
-
-_check_subscription_update = make_checker(subscription_update_event)
-
 def check_subscription_update(
     var_name: str, event: dict[str, object], property: str, value: bool
 ) -> None:
@@ -339,7 +334,6 @@ def check_subscription_update(
     assert event["value"] == value
 
 
-_check_update_display_settings = make_checker(update_display_settings_event)
 
 def check_update_display_settings(
     var_name: str,
@@ -367,8 +361,6 @@ def check_update_display_settings(
         assert "language_name" not in event
 
 
-_check_user_settings_update = make_checker(user_settings_update_event)
-
 def check_user_settings_update(
     var_name: str,
     event: dict[str, object],
@@ -390,8 +382,6 @@ def check_user_settings_update(
         assert "language_name" not in event
 
 
-_check_update_global_notifications = make_checker(update_global_notifications_event)
-
 def check_update_global_notifications(
     var_name: str,
     event: dict[str, object],
@@ -409,9 +399,6 @@ def check_update_global_notifications(
     assert isinstance(setting_name, str)
     setting_type = UserProfile.notification_settings_legacy[setting_name]
     assert isinstance(setting, setting_type)
-
-
-_check_update_message = make_checker(update_message_event)
 
 
 def check_update_message(
@@ -454,7 +441,6 @@ def check_update_message(
     assert event["rendering_only"] == is_embedded_update_only
     assert expected_keys == actual_keys
 
-_check_user_group_update = make_checker(user_group_update_event)
 
 def check_user_group_update(var_name: str, event: dict[str, object], field: str) -> None:
     _check_user_group_update(var_name, event)
@@ -463,8 +449,6 @@ def check_user_group_update(var_name: str, event: dict[str, object], field: str)
 
     assert set(event["data"].keys()) == {field}
 
-
-_check_user_status = make_checker(user_status_event)
 
 def check_user_status(var_name: str, event: dict[str, object], fields: set[str]) -> None:
     _check_user_status(var_name, event)
