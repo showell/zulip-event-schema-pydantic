@@ -175,7 +175,7 @@ class EnumType:
         self.valid_vals = valid_vals
 
     def flat_name(self):
-        return f"Literal{self.valid_vals}"
+        return f"Literal{sorted(self.valid_vals)}"
 
 
 class Equals:

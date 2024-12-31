@@ -152,7 +152,7 @@ class direct_message_event(BaseModel):
 
 class _draft_fields_core(BaseModel):
     id: int
-    type: Literal["", "stream", "private"]
+    type: Literal["", "private", "stream"]
     to: List[int]
     topic: str
     content: str
@@ -283,7 +283,7 @@ class reaction_add_event(BaseModel):
     message_id: int
     emoji_name: str
     emoji_code: str
-    reaction_type: Literal["unicode_emoji", "realm_emoji", "zulip_extra_emoji"]
+    reaction_type: Literal["realm_emoji", "unicode_emoji", "zulip_extra_emoji"]
     user_id: int
     id: int
 
@@ -294,7 +294,7 @@ class reaction_remove_event(BaseModel):
     message_id: int
     emoji_name: str
     emoji_code: str
-    reaction_type: Literal["unicode_emoji", "realm_emoji", "zulip_extra_emoji"]
+    reaction_type: Literal["realm_emoji", "unicode_emoji", "zulip_extra_emoji"]
     user_id: int
     id: int
 
@@ -724,7 +724,7 @@ class saved_snippet_remove_event(BaseModel):
 
 class _scheduled_message_fields_core(BaseModel):
     scheduled_message_id: int
-    type: Literal["stream", "private"]
+    type: Literal["private", "stream"]
     to: Union[List[int], int]
     content: str
     rendered_content: str
@@ -974,7 +974,7 @@ class update_message_event(_update_message_event_core):
     topic_links: Optional[List[_topic_link]] = None
     subject: Optional[str] = None
     new_stream_id: Optional[int] = None
-    propagate_mode: Optional[Literal["change_one", "change_later", "change_all"]] = None
+    propagate_mode: Optional[Literal["change_all", "change_later", "change_one"]] = None
     orig_subject: Optional[str] = None
 
 
@@ -1130,7 +1130,7 @@ class user_status_event(_user_status_event_core):
     status_text: Optional[str] = None
     emoji_name: Optional[str] = None
     emoji_code: Optional[str] = None
-    reaction_type: Optional[Literal["unicode_emoji", "realm_emoji", "zulip_extra_emoji"]] = None
+    reaction_type: Optional[Literal["realm_emoji", "unicode_emoji", "zulip_extra_emoji"]] = None
 
 
 class user_topic_event(BaseModel):
