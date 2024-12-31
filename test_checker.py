@@ -102,5 +102,5 @@ with open("real_world_checker_calls.txt", "r") as file:
     for i, line in enumerate(file):
         c = eval(line, context)
         f = globals()[c["name"]]
-        print(i, c["name"])
+        # print(i, c["name"])
         f(*c["args"], **c["kwargs"])

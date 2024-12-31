@@ -124,9 +124,7 @@ PERSON_TYPES = dict(
 
 def make_checker(base_model):
     def f(name, event):
-        print("name", name)
-        print("event", event)
-        print("base_model", base_model)
+        assert type(name) is str
         base_model(**event)
 
     return f
@@ -580,10 +578,6 @@ def check_update_message(
         assert isinstance(event["user_id"], int)
 
     assert event["rendering_only"] == is_embedded_update_only
-    print(expected_keys)
-    print(actual_keys)
-    print(actual_keys - expected_keys)
-    print(expected_keys - actual_keys)
     assert expected_keys == actual_keys
 
 
