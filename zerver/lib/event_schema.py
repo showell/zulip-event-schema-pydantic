@@ -225,13 +225,11 @@ def check_realm_bot_add(
     if bot_type == UserProfile.DEFAULT_BOT:
         assert services == []
     elif bot_type == UserProfile.OUTGOING_WEBHOOK_BOT:
-        sub_type = _bot_services_outgoing_type
         assert len(services) == 1
-        sub_type(**services[0])
+        _bot_services_outgoing_type(**services[0])
     elif bot_type == UserProfile.EMBEDDED_BOT:
-        sub_type = _bot_services_embedded_type
         assert len(services) == 1
-        sub_type(**services[0])
+        _bot_services_embedded_type(**services[0])
     else:
         raise AssertionError(f"Unknown bot_type: {bot_type}")
 
