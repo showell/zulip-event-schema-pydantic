@@ -4,6 +4,8 @@ from typing import Dict, List, Literal, Tuple, Optional, Union
 # TODO: Make this check for valid urls using URLValidator from django
 UrlType = str
 
+from zerver.lib.types import AnonymousSettingGroupDict
+
 
 class alert_words_event(BaseModel):
     type: Literal["alert_words"]
@@ -496,28 +498,23 @@ class _night_logo_data(BaseModel):
     night_logo_source: str
 
 
-class _group_info(BaseModel):
-    direct_members: List[int]
-    direct_subgroups: List[int]
-
-
 class _group_setting_update_data_type(BaseModel):
     # TODO: fix types to avoid optional fields
-    create_multiuse_invite_group: Optional[Union[int, _group_info]] = None
-    can_access_all_users_group: Optional[Union[int, _group_info]] = None
-    can_add_custom_emoji_group: Optional[Union[int, _group_info]] = None
-    can_create_groups: Optional[Union[int, _group_info]] = None
-    can_create_public_channel_group: Optional[Union[int, _group_info]] = None
-    can_create_private_channel_group: Optional[Union[int, _group_info]] = None
-    can_create_web_public_channel_group: Optional[Union[int, _group_info]] = None
-    can_delete_any_message_group: Optional[Union[int, _group_info]] = None
-    can_delete_own_message_group: Optional[Union[int, _group_info]] = None
-    can_invite_users_group: Optional[Union[int, _group_info]] = None
-    can_manage_all_groups: Optional[Union[int, _group_info]] = None
-    can_move_messages_between_channels_group: Optional[Union[int, _group_info]] = None
-    can_move_messages_between_topics_group: Optional[Union[int, _group_info]] = None
-    direct_message_initiator_group: Optional[Union[int, _group_info]] = None
-    direct_message_permission_group: Optional[Union[int, _group_info]] = None
+    create_multiuse_invite_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
+    can_access_all_users_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
+    can_add_custom_emoji_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
+    can_create_groups: Optional[Union[int, AnonymousSettingGroupDict]] = None
+    can_create_public_channel_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
+    can_create_private_channel_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
+    can_create_web_public_channel_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
+    can_delete_any_message_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
+    can_delete_own_message_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
+    can_invite_users_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
+    can_manage_all_groups: Optional[Union[int, AnonymousSettingGroupDict]] = None
+    can_move_messages_between_channels_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
+    can_move_messages_between_topics_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
+    direct_message_initiator_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
+    direct_message_permission_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
 
 
 class _plan_type_data(BaseModel):
@@ -743,8 +740,8 @@ class scheduled_messages_update_event(BaseModel):
 
 class _basic_stream_fields(BaseModel):
     is_archived: bool
-    can_administer_channel_group: Union[int, _group_info]
-    can_remove_subscribers_group: Union[int, _group_info]
+    can_administer_channel_group: Union[int, AnonymousSettingGroupDict]
+    can_remove_subscribers_group: Union[int, AnonymousSettingGroupDict]
     creator_id: Optional[int]
     date_created: int
     description: str
@@ -780,7 +777,7 @@ class stream_update_event(BaseModel):
     type: Literal["stream"]
     op: Literal["update"]
     property: str
-    value: Union[bool, int, str, _group_info, Literal[None]]
+    value: Union[bool, int, str, AnonymousSettingGroupDict, Literal[None]]
     name: str
     stream_id: int
     id: int
@@ -803,8 +800,8 @@ class submessage_event(BaseModel):
 
 class _single_subscription_type(BaseModel):
     is_archived: bool
-    can_administer_channel_group: Union[int, _group_info]
-    can_remove_subscribers_group: Union[int, _group_info]
+    can_administer_channel_group: Union[int, AnonymousSettingGroupDict]
+    can_remove_subscribers_group: Union[int, AnonymousSettingGroupDict]
     creator_id: Optional[int]
     date_created: int
     description: str
@@ -994,12 +991,12 @@ class _group_type(BaseModel):
     direct_subgroup_ids: List[int]
     description: str
     is_system_group: bool
-    can_add_members_group: Union[int, _group_info]
-    can_join_group: Union[int, _group_info]
-    can_leave_group: Union[int, _group_info]
-    can_manage_group: Union[int, _group_info]
-    can_mention_group: Union[int, _group_info]
-    can_remove_members_group: Union[int, _group_info]
+    can_add_members_group: Union[int, AnonymousSettingGroupDict]
+    can_join_group: Union[int, AnonymousSettingGroupDict]
+    can_leave_group: Union[int, AnonymousSettingGroupDict]
+    can_manage_group: Union[int, AnonymousSettingGroupDict]
+    can_mention_group: Union[int, AnonymousSettingGroupDict]
+    can_remove_members_group: Union[int, AnonymousSettingGroupDict]
     deactivated: bool
 
 
@@ -1053,12 +1050,12 @@ class _user_group_data_type(BaseModel):
     # TODO: fix types to avoid optional fields
     name: Optional[str] = None
     description: Optional[str] = None
-    can_add_members_group: Optional[Union[int, _group_info]] = None
-    can_join_group: Optional[Union[int, _group_info]] = None
-    can_leave_group: Optional[Union[int, _group_info]] = None
-    can_manage_group: Optional[Union[int, _group_info]] = None
-    can_mention_group: Optional[Union[int, _group_info]] = None
-    can_remove_members_group: Optional[Union[int, _group_info]] = None
+    can_add_members_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
+    can_join_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
+    can_leave_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
+    can_manage_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
+    can_mention_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
+    can_remove_members_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
     deactivated: Optional[bool] = None
 
 

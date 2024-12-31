@@ -22,7 +22,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 """
 
-PERSISTED_NAMES = set()
+PERSISTED_NAMES = set("AnonymousSettingGroupDict")
 
 def indent(s: str) -> str:
     padding = "    "
@@ -85,7 +85,7 @@ class DictType:
             if key == "editable_by_user":
                 self._name = "_detailed_custom_profile"
             if key == "direct_subgroups":
-                self._name = "_group_info"
+                self._name = "AnonymousSettingGroupDict"
             if key == "stream_weekly_traffic":
                 self._name = "_basic_stream_fields"
 
@@ -130,6 +130,9 @@ class DictType:
         return "Any"
 
     def print_full_pydantic(self, *, name):
+        if name == "AnonymousSettingGroupDict":
+            return
+
         s = f"class {name}(BaseModel):\n"
 
         for key, data_type in self.required_keys:

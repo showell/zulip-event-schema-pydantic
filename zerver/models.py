@@ -2,6 +2,7 @@
 
 from typing import Any
 
+
 class Realm:
     pass
 
@@ -151,4 +152,3 @@ class UserProfile:
         **notification_setting_types,
         **modern_settings,
     }
-

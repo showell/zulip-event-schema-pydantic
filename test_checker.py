@@ -74,6 +74,7 @@ from zerver.lib.event_schema import (
 
 from zerver.lib.types import AnonymousSettingGroupDict
 
+
 class VisibilityPolicyType:
     def __init__(self):
         self.MUTED = 1
@@ -81,11 +82,14 @@ class VisibilityPolicyType:
         self.FOLLOWED = 3
         self.INHERIT = 0
 
+
 VisiblityPolicy = VisibilityPolicyType()
+
 
 class UserTopicType:
     def __init__(self):
         self.VisibilityPolicy = VisiblityPolicy
+
 
 UserTopic = UserTopicType()
 
