@@ -73,8 +73,6 @@ from pydantic_schema import (
     realm_user_update_event,
     restart_event,
     saved_snippet_add_event,
-    saved_snippet_add_event,
-    saved_snippet_remove_event,
     saved_snippet_remove_event,
     scheduled_messages_add_event,
     scheduled_messages_remove_event,
@@ -121,11 +119,14 @@ PERSON_TYPES = dict(
     is_active=_person_is_active,
 )
 
+
 def validate_event_with_model_type(event, model):
     allowed_fields = set(model.__fields__.keys())
     if not set(event.keys()).issubset(allowed_fields):
         raise ValueError(f"Extra fields not allowed: {set(event.keys()) - allowed_fields}")
+
     model.model_validate(event, strict=True)
+
 
 def make_checker(base_model):
     def f(name, event):
@@ -631,8 +632,6 @@ check_realm_user_add = make_checker(realm_user_add_event)
 check_realm_user_remove = make_checker(realm_user_remove_event)
 check_restart_event = make_checker(restart_event)
 check_saved_snippet_add = make_checker(saved_snippet_add_event)
-check_saved_snippet_add = make_checker(saved_snippet_add_event)
-check_saved_snippet_remove = make_checker(saved_snippet_remove_event)
 check_saved_snippet_remove = make_checker(saved_snippet_remove_event)
 check_scheduled_message_add = make_checker(scheduled_messages_add_event)
 check_scheduled_message_remove = make_checker(scheduled_messages_remove_event)
