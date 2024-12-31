@@ -1,6 +1,10 @@
-import zerver.lib.event_schema
+import zerver.lib.event_schema_legacy
 
-module_dict = zerver.lib.event_schema.__dict__
+import random
+
+random.seed(42)
+
+module_dict = zerver.lib.event_schema_legacy.__dict__
 print("SAMPLE_DATA = dict(")
 for k in sorted(module_dict):
     if k.endswith("_event") and not k.startswith("check_"):

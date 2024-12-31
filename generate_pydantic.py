@@ -1,4 +1,4 @@
-import zerver.lib.event_schema
+import zerver.lib.event_schema_legacy
 from zerver.lib.data_types import DictType, UnionType
 
 print(
@@ -12,7 +12,7 @@ UrlType = str
 """
 )
 
-module_dict = zerver.lib.event_schema.__dict__
+module_dict = zerver.lib.event_schema_legacy.__dict__
 
 
 def fix_name(k):
