@@ -173,11 +173,19 @@ class Realm:
     )
 
 
-class RealmUserDefault:
-    pass
-
-
 class Stream:
+    STREAM_POST_POLICY_EVERYONE = 1
+    STREAM_POST_POLICY_ADMINS = 2
+    STREAM_POST_POLICY_RESTRICT_NEW_MEMBERS = 3
+    STREAM_POST_POLICY_MODERATORS = 4
+
+    STREAM_POST_POLICY_TYPES = [
+        STREAM_POST_POLICY_EVERYONE,
+        STREAM_POST_POLICY_ADMINS,
+        STREAM_POST_POLICY_MODERATORS,
+        STREAM_POST_POLICY_RESTRICT_NEW_MEMBERS,
+    ]
+
     stream_permission_group_settings = {
         "can_administer_channel_group": GroupPermissionSetting(
             require_system_group=False,
@@ -197,54 +205,6 @@ class Stream:
 
 
 class UserProfile:
-    USERNAME_FIELD = "email"
-    MAX_NAME_LENGTH = 100
-    MIN_NAME_LENGTH = 2
-    API_KEY_LENGTH = 32
-    NAME_INVALID_CHARS = ["*", "`", "\\", ">", '"', "@"]
-
-    DEFAULT_BOT = 1
-    """
-    Incoming webhook bots are limited to only sending messages via webhooks.
-    Thus, it is less of a security risk to expose their API keys to third-party services,
-    since they can't be used to read messages.
-    """
-    INCOMING_WEBHOOK_BOT = 2
-    # This value is also being used in web/src/settings_bots.js.
-    # On updating it here, update it there as well.
-    OUTGOING_WEBHOOK_BOT = 3
-    """
-    Embedded bots run within the Zulip server itself; events are added to the
-    embedded_bots queue and then handled by a QueueProcessingWorker.
-    """
-    EMBEDDED_BOT = 4
-
-    BOT_TYPES = {
-        DEFAULT_BOT: "Generic bot",
-        INCOMING_WEBHOOK_BOT: "Incoming webhook",
-        OUTGOING_WEBHOOK_BOT: "Outgoing webhook",
-        EMBEDDED_BOT: "Embedded bot",
-    }
-
-    SERVICE_BOT_TYPES = [
-        OUTGOING_WEBHOOK_BOT,
-        EMBEDDED_BOT,
-    ]
-
-    ROLE_REALM_OWNER = 100
-    ROLE_REALM_ADMINISTRATOR = 200
-    ROLE_MODERATOR = 300
-    ROLE_MEMBER = 400
-    ROLE_GUEST = 600
-
-    ROLE_TYPES = [
-        ROLE_REALM_OWNER,
-        ROLE_REALM_ADMINISTRATOR,
-        ROLE_MODERATOR,
-        ROLE_MEMBER,
-        ROLE_GUEST,
-    ]
-
     display_settings_legacy = dict(
         # Don't add anything new to this legacy dict.
         # Instead, see `modern_settings` below.
@@ -333,3 +293,54 @@ class UserProfile:
         **notification_setting_types,
         **modern_settings,
     }
+
+    USERNAME_FIELD = "email"
+    MAX_NAME_LENGTH = 100
+    MIN_NAME_LENGTH = 2
+    API_KEY_LENGTH = 32
+    NAME_INVALID_CHARS = ["*", "`", "\\", ">", '"', "@"]
+
+    DEFAULT_BOT = 1
+    """
+    Incoming webhook bots are limited to only sending messages via webhooks.
+    Thus, it is less of a security risk to expose their API keys to third-party services,
+    since they can't be used to read messages.
+    """
+    INCOMING_WEBHOOK_BOT = 2
+    # This value is also being used in web/src/settings_bots.js.
+    # On updating it here, update it there as well.
+    OUTGOING_WEBHOOK_BOT = 3
+    """
+    Embedded bots run within the Zulip server itself; events are added to the
+    embedded_bots queue and then handled by a QueueProcessingWorker.
+    """
+    EMBEDDED_BOT = 4
+
+    BOT_TYPES = {
+        DEFAULT_BOT: "Generic bot",
+        INCOMING_WEBHOOK_BOT: "Incoming webhook",
+        OUTGOING_WEBHOOK_BOT: "Outgoing webhook",
+        EMBEDDED_BOT: "Embedded bot",
+    }
+
+    SERVICE_BOT_TYPES = [
+        OUTGOING_WEBHOOK_BOT,
+        EMBEDDED_BOT,
+    ]
+
+    ROLE_REALM_OWNER = 100
+    ROLE_REALM_ADMINISTRATOR = 200
+    ROLE_MODERATOR = 300
+    ROLE_MEMBER = 400
+    ROLE_GUEST = 600
+
+    ROLE_TYPES = [
+        ROLE_REALM_OWNER,
+        ROLE_REALM_ADMINISTRATOR,
+        ROLE_MODERATOR,
+        ROLE_MEMBER,
+        ROLE_GUEST,
+    ]
+
+class RealmUserDefault(UserProfile):
+    pass
