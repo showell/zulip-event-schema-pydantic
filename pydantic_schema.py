@@ -53,9 +53,23 @@ class attachment_update_event(BaseModel):
     id: int
 
 
+class _detailed_custom_profile(BaseModel):
+    id: int
+    type: int
+    name: str
+    hint: str
+    field_data: str
+    order: int
+    required: bool
+    editable_by_user: bool
+
+    # TODO: fix types to avoid optional fields
+    display_in_profile_summary: Optional[bool] = None
+
+
 class custom_profile_fields_event(BaseModel):
     type: Literal["custom_profile_fields"]
-    fields: List[Any]
+    fields: List[_detailed_custom_profile]
     id: int
 
 

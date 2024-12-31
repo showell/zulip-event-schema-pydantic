@@ -79,6 +79,11 @@ class DictType:
         self.sample_data = [dict()]
         self.make_sample_data()
 
+        # huge hack
+        for key, data_type in self.required_keys:
+            if key == "editable_by_user":
+                self._name = "_detailed_custom_profile"
+
     def make_sample_data(self):
         for key, data_type in self.required_keys:
             new_sample_data = []
