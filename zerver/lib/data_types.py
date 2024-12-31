@@ -121,8 +121,10 @@ class DictType:
         for key, data_type in self.required_keys:
             s += f"    {key}: {get_flat_name(data_type)}\n"
 
-        for key, data_type in self.optional_keys:
-            s += f"    {key}: Optional[{get_flat_name(data_type)}] = None\n"
+        if self.optional_keys:
+            s += "\n    # TODO: fix types to avoid optional fields\n"
+            for key, data_type in self.optional_keys:
+                s += f"    {key}: Optional[{get_flat_name(data_type)}] = None\n"
 
         s += "\n\n"
         print(s)

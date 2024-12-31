@@ -78,6 +78,8 @@ class delete_message_event(BaseModel):
     type: Literal["delete_message"]
     message_type: Literal["private", "stream"]
     id: int
+
+    # TODO: fix types to avoid optional fields
     message_id: Optional[int] = None
     message_ids: Optional[List[int]] = None
     stream_id: Optional[int] = None
@@ -97,6 +99,8 @@ class _draft_fields(BaseModel):
     to: List[int]
     topic: str
     content: str
+
+    # TODO: fix types to avoid optional fields
     timestamp: Optional[int] = None
 
 
@@ -185,6 +189,8 @@ class presence_event(BaseModel):
     server_timestamp: Union[float, int]
     presence: Dict[str, _presence_type]
     id: int
+
+    # TODO: fix types to avoid optional fields
     email: Optional[str] = None
 
 
@@ -256,6 +262,8 @@ class realm_bot_delete_event(BaseModel):
 
 class _bot_type_for_update(BaseModel):
     user_id: int
+
+    # TODO: fix types to avoid optional fields
     api_key: Optional[str] = None
     avatar_url: Optional[str] = None
     default_all_public_streams: Optional[bool] = None
@@ -379,6 +387,8 @@ class _allow_message_editing_data(BaseModel):
 class _authentication_method_dict(BaseModel):
     enabled: bool
     available: bool
+
+    # TODO: fix types to avoid optional fields
     unavailable_reason: Optional[str] = None
 
 
@@ -414,6 +424,7 @@ class _night_logo_data(BaseModel):
 
 
 class _group_setting_update_data_type(BaseModel):
+    # TODO: fix types to avoid optional fields
     create_multiuse_invite_group: Optional[Union[int, Any]] = None
     can_access_all_users_group: Optional[Union[int, Any]] = None
     can_add_custom_emoji_group: Optional[Union[int, Any]] = None
@@ -553,6 +564,8 @@ class _scheduled_message_fields(BaseModel):
     rendered_content: str
     scheduled_delivery_timestamp: int
     failed: bool
+
+    # TODO: fix types to avoid optional fields
     topic: Optional[str] = None
 
 
@@ -599,6 +612,8 @@ class stream_update_event(BaseModel):
     name: str
     stream_id: int
     id: int
+
+    # TODO: fix types to avoid optional fields
     rendered_description: Optional[str] = None
     history_public_to_subscribers: Optional[bool] = None
     is_web_public: Optional[bool] = None
@@ -700,6 +715,8 @@ class typing_start_event(BaseModel):
     message_type: Literal["direct", "stream"]
     sender: _typing_person_type
     id: int
+
+    # TODO: fix types to avoid optional fields
     recipients: Optional[List[_typing_person_type]] = None
     stream_id: Optional[int] = None
     topic: Optional[str] = None
@@ -711,6 +728,8 @@ class typing_stop_event(BaseModel):
     message_type: Literal["direct", "stream"]
     sender: _typing_person_type
     id: int
+
+    # TODO: fix types to avoid optional fields
     recipients: Optional[List[_typing_person_type]] = None
     stream_id: Optional[int] = None
     topic: Optional[str] = None
@@ -722,6 +741,8 @@ class update_display_settings_event(BaseModel):
     setting: Union[bool, int, str]
     user: str
     id: int
+
+    # TODO: fix types to avoid optional fields
     language_name: Optional[str] = None
 
 
@@ -747,6 +768,8 @@ class update_message_event(BaseModel):
     message_ids: List[int]
     rendering_only: bool
     id: int
+
+    # TODO: fix types to avoid optional fields
     stream_id: Optional[int] = None
     stream_name: Optional[str] = None
     is_me_message: Optional[bool] = None
@@ -779,6 +802,8 @@ class update_message_flags_remove_event(BaseModel):
     messages: List[int]
     all: bool
     id: int
+
+    # TODO: fix types to avoid optional fields
     message_details: Optional[Dict[str, Any]] = None
 
 
@@ -847,6 +872,7 @@ class user_group_remove_subgroups_event(BaseModel):
 
 
 class _user_group_data_type(BaseModel):
+    # TODO: fix types to avoid optional fields
     name: Optional[str] = None
     description: Optional[str] = None
     can_add_members_group: Optional[Union[int, Any]] = None
@@ -872,6 +898,8 @@ class user_settings_update_event(BaseModel):
     property: str
     value: Union[bool, int, str]
     id: int
+
+    # TODO: fix types to avoid optional fields
     language_name: Optional[str] = None
 
 
@@ -879,6 +907,8 @@ class user_status_event(BaseModel):
     type: Literal["user_status"]
     user_id: int
     id: int
+
+    # TODO: fix types to avoid optional fields
     away: Optional[bool] = None
     status_text: Optional[str] = None
     emoji_name: Optional[str] = None
