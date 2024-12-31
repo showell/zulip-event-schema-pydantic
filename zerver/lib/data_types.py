@@ -145,13 +145,6 @@ class DictType:
         s += "\n\n"
         print(s)
 
-    def schema(self, var_name: str) -> str:
-        # Our current schema is lossy, since our OpenAPI configs
-        # aren't rigorous about "required" fields yet.
-        keys = sorted([*self.required_keys, *self.optional_keys])
-
-        sub_schema = "\n".join(schema(name, data_type) for name, data_type in keys)
-        return f"{var_name} (dict):\n{indent(sub_schema)}"
 
 
 @dataclass
@@ -163,9 +156,6 @@ class EnumType:
     def __init__(self, valid_vals):
         self.sample_data = valid_vals
         self.valid_vals = valid_vals
-
-    def schema(self, var_name: str) -> str:
-        return f"{var_name} in {sorted(self.valid_vals)}"
 
     def flat_name(self):
         return f"Literal{self.valid_vals}"
@@ -182,11 +172,6 @@ class Equals:
             self.equalsNone = True
         self.sample_data = [expected_value]
 
-    def schema(self, var_name: str) -> str:
-        # Treat Equals as the degenerate case of EnumType, which
-        # matches how we do things with OpenAPI.
-        return f"{var_name} in {[self.expected_value]!r}"
-
     def flat_name(self):
         return f"Literal[{self.expected_value!r}]"
 
@@ -198,9 +183,6 @@ class NumberType:
     def __init__(self):
         self.sample_data = [100, 3.14]
 
-    def schema(self, var_name: str) -> str:
-        return f"{var_name}: number"
-
     def flat_name(self):
         return "Union[float, int]"
 
@@ -211,10 +193,6 @@ class ListType:
         self.sub_type = sub_type
         self.length = length
         self.sample_data = [[item, item, item] for item in get_sample_data(sub_type)]
-
-    def schema(self, var_name: str) -> str:
-        sub_schema = schema("type", self.sub_type)
-        return f"{var_name} (list):\n{indent(sub_schema)}"
 
     def flat_name(self):
         return f"List[{get_flat_name(self.sub_type)}]"
@@ -230,10 +208,6 @@ class StringDictType:
         self.sample_data = [dict(some_key=val) for val in get_sample_data(value_type)]
         self.value_type = value_type
 
-    def schema(self, var_name: str) -> str:
-        sub_schema = schema("value", self.value_type)
-        return f"{var_name} (string_dict):\n{indent(sub_schema)}"
-
     def flat_name(self):
         return f"Dict[str, {get_flat_name(self.value_type)}]"
 
@@ -245,11 +219,6 @@ class OptionalType:
     def __init__(self, sub_type):
         self.sample_data = [None] + get_sample_data(sub_type)
         self.sub_type = sub_type
-
-    def schema(self, var_name: str) -> str:
-        # our OpenAPI spec doesn't support optional types very well yet,
-        # so we just return the schema for our subtype
-        return schema(var_name, self.sub_type)
 
     def flat_name(self):
         return f"Optional[{get_flat_name(self.sub_type)}]"
@@ -277,14 +246,6 @@ class TupleType:
         if len(self.sample_data) > 40:
             self.sample_data = random.sample(self.sample_data, 40)
 
-    def schema(self, var_name: str) -> str:
-        sub_schemas = "\n".join(
-            sorted(
-                schema(str(i), sub_type) for i, sub_type in enumerate(self.sub_types)
-            )
-        )
-        return f"{var_name} (tuple):\n{indent(sub_schemas)}"
-
     def flat_name(self):
         sub_names = [get_flat_name(t) for t in self.sub_types]
         return f"Tuple[{", ".join(sub_names)}]"
@@ -301,16 +262,6 @@ class UnionType:
         if len(self.sample_data) > 40:
             self.sample_data = random.sample(self.sample_data, 40)
 
-    def schema(self, var_name: str) -> str:
-        # We hack around our OpenAPI specs not accounting for None.
-        sub_schemas = "\n".join(
-            sorted(
-                schema("type", sub_type)
-                for sub_type in self.sub_types
-                if not hasattr(sub_type, "equalsNone")
-            )
-        )
-        return f"{var_name} (union):\n{indent(sub_schemas)}"
 
     def flat_name(self):
         sub_names = [get_flat_name(t) for t in self.sub_types]
@@ -319,10 +270,6 @@ class UnionType:
 class UrlType:
     def __init__(self):
         self.sample_data = ["http://example.com"]
-
-    def schema(self, var_name: str) -> str:
-        # just report str to match OpenAPI
-        return f"{var_name}: str"
 
     def flat_name(self):
         return "UrlType"
@@ -361,26 +308,6 @@ def make_checker(
 
     data_type.__is_for_checker = True
     return f
-
-
-def schema(
-    var_name: str,
-    data_type: Any,
-) -> str:
-    """Returns a YAML-like string for our data type; these are used for
-    pretty-printing and comparison between the OpenAPI type
-    definitions and these Python data types, as part of
-
-    schema is a glorified repr of a data type, but it also includes a
-    var_name you pass in, plus we dumb things down a bit to match our
-    current OpenAPI spec.
-    """
-    if hasattr(data_type, "schema"):
-        return data_type.schema(var_name)
-    if data_type in [bool, dict, int, float, list, str]:
-        return f"{var_name}: {data_type.__name__}"
-    raise AssertionError(f"unknown type {data_type}")
-
 
 def check_data(
     data_type: Any,
