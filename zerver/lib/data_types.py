@@ -88,8 +88,12 @@ class DictType:
 
     def full_pydantic(self, *, name):
         s = f"class {name}(BaseModel):\n"
+
         for key, data_type in self.required_keys:
             s += f"    {key}: {get_flat_name(data_type)}\n"
+
+        for key, data_type in self.optional_keys:
+            s += f"    {key}: Optional[{get_flat_name(data_type)}] = None\n"
         return s
 
     def check_data(self, var_name: str, val: dict[str, Any]) -> None:

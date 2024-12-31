@@ -54,6 +54,10 @@ class delete_message_event(BaseModel):
     type: Literal["delete_message"]
     message_type: Literal["private", "stream"]
     id: int
+    message_id: Optional[int] = None
+    message_ids: Optional[List[int]] = None
+    stream_id: Optional[int] = None
+    topic: Optional[str] = None
 
 
 class direct_message_event(BaseModel):
@@ -131,6 +135,7 @@ class presence_event(BaseModel):
     server_timestamp: Union[float, int]
     presence: Dict[str, Any]
     id: int
+    email: Optional[str] = None
 
 
 class reaction_add_event(BaseModel):
@@ -347,6 +352,9 @@ class stream_update_event(BaseModel):
     name: str
     stream_id: int
     id: int
+    rendered_description: Optional[str] = None
+    history_public_to_subscribers: Optional[bool] = None
+    is_web_public: Optional[bool] = None
 
 
 class submessage_event(BaseModel):
@@ -404,6 +412,9 @@ class typing_start_event(BaseModel):
     message_type: Literal["direct", "stream"]
     sender: Any
     id: int
+    recipients: Optional[List[Any]] = None
+    stream_id: Optional[int] = None
+    topic: Optional[str] = None
 
 
 class typing_stop_event(BaseModel):
@@ -412,6 +423,9 @@ class typing_stop_event(BaseModel):
     message_type: Literal["direct", "stream"]
     sender: Any
     id: int
+    recipients: Optional[List[Any]] = None
+    stream_id: Optional[int] = None
+    topic: Optional[str] = None
 
 
 class update_display_settings_event(BaseModel):
@@ -420,6 +434,7 @@ class update_display_settings_event(BaseModel):
     setting: Union[bool, int, str]
     user: str
     id: int
+    language_name: Optional[str] = None
 
 
 class update_global_notifications_event(BaseModel):
@@ -439,6 +454,18 @@ class update_message_event(BaseModel):
     message_ids: List[int]
     rendering_only: bool
     id: int
+    stream_id: Optional[int] = None
+    stream_name: Optional[str] = None
+    is_me_message: Optional[bool] = None
+    orig_content: Optional[str] = None
+    orig_rendered_content: Optional[str] = None
+    content: Optional[str] = None
+    rendered_content: Optional[str] = None
+    topic_links: Optional[List[Any]] = None
+    subject: Optional[str] = None
+    new_stream_id: Optional[int] = None
+    propagate_mode: Optional[Literal["change_one", "change_later", "change_all"]] = None
+    orig_subject: Optional[str] = None
 
 
 class update_message_flags_add_event(BaseModel):
@@ -459,6 +486,7 @@ class update_message_flags_remove_event(BaseModel):
     messages: List[int]
     all: bool
     id: int
+    message_details: Optional[Dict[str, Any]] = None
 
 
 class user_group_add_event(BaseModel):
@@ -521,12 +549,18 @@ class user_settings_update_event(BaseModel):
     property: str
     value: Union[bool, int, str]
     id: int
+    language_name: Optional[str] = None
 
 
 class user_status_event(BaseModel):
     type: Literal["user_status"]
     user_id: int
     id: int
+    away: Optional[bool] = None
+    status_text: Optional[str] = None
+    emoji_name: Optional[str] = None
+    emoji_code: Optional[str] = None
+    reaction_type: Optional[Literal["unicode_emoji", "realm_emoji", "zulip_extra_emoji"]] = None
 
 
 class user_topic_event(BaseModel):
