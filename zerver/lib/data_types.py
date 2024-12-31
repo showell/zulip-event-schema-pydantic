@@ -28,6 +28,14 @@ def indent(s: str) -> str:
     parts = s.split("\n")
     return "\n".join(padding + part for part in parts)
 
+def get_flat_name(data_type):
+    if data_type is int:
+        return "int"
+    if data_type is str:
+        return "str"
+    if data_type is bool:
+        return "bool"
+    return data_type.flat_name()
 
 def get_sample_data(data_type):
     if hasattr(data_type, "sample_data"):
@@ -75,6 +83,15 @@ class DictType:
             if len(self.sample_data) > 40:
                 self.sample_data = random.sample(self.sample_data, 40)
 
+    def flat_name(self):
+        return "Any"
+
+    def full_pydantic(self, *, name):
+        s = f"class {name}(BaseModel):\n"
+        for key, data_type in self.required_keys:
+            s += f"    {key}: {get_flat_name(data_type)}\n"
+        return s
+
     def check_data(self, var_name: str, val: dict[str, Any]) -> None:
         if not isinstance(val, dict):
             raise AssertionError(f"{var_name} is not a dict")
@@ -118,6 +135,7 @@ class EnumType:
 
     def __init__(self, valid_vals):
         self.sample_data = valid_vals
+        self.valid_vals = valid_vals
 
     def check_data(self, var_name: str, val: dict[str, Any]) -> None:
         if val not in self.valid_vals:
@@ -125,6 +143,9 @@ class EnumType:
 
     def schema(self, var_name: str) -> str:
         return f"{var_name} in {sorted(self.valid_vals)}"
+
+    def flat_name(self):
+        return f"Literal{self.valid_vals}"
 
 
 class Equals:
@@ -147,6 +168,9 @@ class Equals:
         # matches how we do things with OpenAPI.
         return f"{var_name} in {[self.expected_value]!r}"
 
+    def flat_name(self):
+        return f"Literal[{self.expected_value!r}]"
+
 
 class NumberType:
     """A Union[float, int]; needed to align with the `number` type in
@@ -163,6 +187,8 @@ class NumberType:
     def schema(self, var_name: str) -> str:
         return f"{var_name}: number"
 
+    def flat_name(self):
+        return "Union[float, int]"
 
 class ListType:
     """List with every object having the declared sub_type."""
@@ -184,6 +210,9 @@ class ListType:
         sub_schema = schema("type", self.sub_type)
         return f"{var_name} (list):\n{indent(sub_schema)}"
 
+    def flat_name(self):
+        return f"List[{get_flat_name(self.sub_type)}]"
+
 
 @dataclass
 class StringDictType:
@@ -193,6 +222,7 @@ class StringDictType:
 
     def __init__(self, value_type):
         self.sample_data = [dict(some_key=val) for val in get_sample_data(value_type)]
+        self.value_type = value_type
 
     def check_data(self, var_name: str, val: dict[Any, Any]) -> None:
         if not isinstance(val, dict):
@@ -208,6 +238,9 @@ class StringDictType:
         sub_schema = schema("value", self.value_type)
         return f"{var_name} (string_dict):\n{indent(sub_schema)}"
 
+    def flat_name(self):
+        return f"Dict[str, {get_flat_name(self.value_type)}]"
+
 
 @dataclass
 class OptionalType:
@@ -215,6 +248,7 @@ class OptionalType:
 
     def __init__(self, sub_type):
         self.sample_data = [None] + get_sample_data(sub_type)
+        self.sub_type = sub_type
 
     def check_data(self, var_name: str, val: Any | None) -> None:
         if val is None:
@@ -226,6 +260,9 @@ class OptionalType:
         # so we just return the schema for our subtype
         return schema(var_name, self.sub_type)
 
+    def flat_name(self):
+        return f"Optional[{get_flat_name(self.sub_type)}]"
+
 
 @dataclass
 class TupleType:
@@ -235,6 +272,7 @@ class TupleType:
     sub_types: Sequence[Any]
 
     def __init__(self, sub_types):
+        self.sub_types = sub_types
         self.sample_data = [list()]
         for data_type in sub_types:
             new_sample_data = []
@@ -266,12 +304,16 @@ class TupleType:
         )
         return f"{var_name} (tuple):\n{indent(sub_schemas)}"
 
+    def flat_name(self):
+        sub_names = [get_flat_name(t) for t in self.sub_types]
+        return f"Tuple[{", ".join(sub_names)}]"
 
 @dataclass
 class UnionType:
     sub_types: Sequence[Any]
 
     def __init__(self, sub_types):
+        self.sub_types = sub_types
         self.sample_data = []
         for sub_type in sub_types:
             self.sample_data += get_sample_data(sub_type)
@@ -299,6 +341,9 @@ class UnionType:
         )
         return f"{var_name} (union):\n{indent(sub_schemas)}"
 
+    def flat_name(self):
+        sub_names = [get_flat_name(t) for t in self.sub_types]
+        return f"Union[{", ".join(sub_names)}]"
 
 class UrlType:
     def __init__(self):
@@ -316,6 +361,8 @@ class UrlType:
         # just report str to match OpenAPI
         return f"{var_name}: str"
 
+    def flat_name(self):
+        return "UrlType"
 
 def event_dict_type(
     required_keys: Sequence[tuple[str, Any]],
