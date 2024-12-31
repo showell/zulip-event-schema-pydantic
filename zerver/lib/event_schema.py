@@ -121,6 +121,7 @@ PERSON_TYPES = dict(
     is_active=_person_is_active,
 )
 
+
 def make_checker(base_model):
     def f(name, event):
         print("name", name)

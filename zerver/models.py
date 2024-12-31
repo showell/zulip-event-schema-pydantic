@@ -342,5 +342,6 @@ class UserProfile:
         ROLE_GUEST,
     ]
 
+
 class RealmUserDefault(UserProfile):
     pass
