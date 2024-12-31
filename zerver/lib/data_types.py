@@ -22,6 +22,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 """
 
+PERSISTED_NAMES = set()
 
 def indent(s: str) -> str:
     padding = "    "
@@ -30,9 +31,9 @@ def indent(s: str) -> str:
 
 def get_flat_name(data_type):
     if hasattr(data_type, "_name"):
-        if not hasattr(data_type, "_persisted"):
+        if data_type._name not in PERSISTED_NAMES:
             data_type.print_full_pydantic(name=data_type._name)
-            data_type._persisted = True
+            PERSISTED_NAMES.add(data_type._name)
         return data_type._name
     if data_type is dict:
         return "Dict"
@@ -83,6 +84,8 @@ class DictType:
         for key, data_type in self.required_keys:
             if key == "editable_by_user":
                 self._name = "_detailed_custom_profile"
+            if key == "direct_subgroups":
+                self._name = "_group_info"
 
     def make_sample_data(self):
         for key, data_type in self.required_keys:
