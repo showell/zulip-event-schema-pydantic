@@ -597,10 +597,83 @@ class realm_user_settings_defaults_update_event(BaseModel):
     id: int
 
 
+class _person_avatar_fields(BaseModel):
+    user_id: int
+    avatar_source: str
+    avatar_url: Optional[str]
+    avatar_url_medium: Optional[str]
+    avatar_version: int
+
+
+class _person_bot_owner_id(BaseModel):
+    user_id: int
+    bot_owner_id: int
+
+
+class _custom_profile_field_type(BaseModel):
+    id: int
+    value: Optional[str]
+
+    # TODO: fix types to avoid optional fields
+    rendered_value: Optional[str] = None
+
+
+class _person_custom_profile_field(BaseModel):
+    user_id: int
+    custom_profile_field: _custom_profile_field_type
+
+
+class _person_delivery_email(BaseModel):
+    user_id: int
+    delivery_email: Optional[str]
+
+
+class _person_email(BaseModel):
+    user_id: int
+    new_email: str
+
+
+class _person_full_name(BaseModel):
+    user_id: int
+    full_name: str
+
+
+class _person_is_billing_admin(BaseModel):
+    user_id: int
+    is_billing_admin: bool
+
+
+class _person_role(BaseModel):
+    user_id: int
+    role: Literal[100, 200, 300, 400, 600]
+
+
+class _person_timezone(BaseModel):
+    user_id: int
+    email: str
+    timezone: str
+
+
+class _person_is_active(BaseModel):
+    user_id: int
+    is_active: bool
+
+
 class realm_user_update_event(BaseModel):
     type: Literal["realm_user"]
     op: Literal["update"]
-    person: Union[Any, Any, Any, Any, Any, Any, Any, Any, Any, Any]
+    person: Union[
+        _person_avatar_fields,
+        _person_bot_owner_id,
+        _person_custom_profile_field,
+        _person_delivery_email,
+        _person_email,
+        _person_full_name,
+        _person_is_billing_admin,
+        _person_role,
+        _person_timezone,
+        _person_is_active,
+    ]
     id: int
 
 
