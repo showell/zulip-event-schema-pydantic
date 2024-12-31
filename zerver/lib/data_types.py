@@ -40,23 +40,6 @@ def get_flat_name(data_type):
         return "bool"
     return data_type.flat_name()
 
-def get_sample_data(data_type):
-    if hasattr(data_type, "sample_data"):
-        return data_type.sample_data
-    if data_type is int:
-        return [42, 99]
-    if data_type is str:
-        return ["foo", "bar"]
-    if data_type is bool:
-        return [True, False]
-    if data_type is dict:
-        return [dict(anonymous="whatever")]
-    print(data_type)
-    print("unsupported")
-    import sys
-
-    sys.exit()
-
 
 @dataclass
 class DictType:
@@ -72,8 +55,6 @@ class DictType:
     ) -> None:
         self.required_keys = required_keys
         self.optional_keys = optional_keys
-        self.sample_data = [dict()]
-        self.make_sample_data()
 
         # huge hack
         for key, data_type in self.required_keys:
@@ -87,39 +68,6 @@ class DictType:
         for key, data_type in self.optional_keys:
             if key == "unmuted_stream_msg":
                 self._name = "_message_details"
-
-    def make_sample_data(self):
-        for key, data_type in self.required_keys:
-            new_sample_data = []
-            for new_val in get_sample_data(data_type):
-                for old_sample in self.sample_data:
-                    new_item = dict()
-                    for k, v in old_sample.items():
-                        new_item[k] = v
-                    new_item[key] = new_val
-                    new_sample_data.append(new_item)
-            self.sample_data = new_sample_data
-            if len(self.sample_data) > 40:
-                self.sample_data = random.sample(self.sample_data, 40)
-
-        for key, data_type in self.optional_keys:
-            new_sample_data = []
-            for new_val in get_sample_data(data_type):
-                for old_sample in self.sample_data:
-                    new_item = dict()
-                    for k, v in old_sample.items():
-                        new_item[k] = v
-                    new_item[key] = new_val
-                    new_sample_data.append(new_item)
-                for old_sample in self.sample_data:
-                    new_item = dict()
-                    for k, v in old_sample.items():
-                        new_item[k] = v
-                    # LEAVE OUT KEY!
-                    new_sample_data.append(new_item)
-            self.sample_data = new_sample_data
-            if len(self.sample_data) > 40:
-                self.sample_data = random.sample(self.sample_data, 40)
 
     def flat_name(self):
         return "Any"
@@ -170,10 +118,6 @@ class EnumType:
 
     valid_vals: Sequence[Any]
 
-    def __init__(self, valid_vals):
-        self.sample_data = valid_vals
-        self.valid_vals = valid_vals
-
     def flat_name(self):
         return f"Literal{sorted(self.valid_vals)}"
 
@@ -187,7 +131,6 @@ class Equals:
         # super hack for OpenAPI workaround
         if self.expected_value is None:
             self.equalsNone = True
-        self.sample_data = [expected_value]
 
     def flat_name(self):
         return f"Literal[{self.expected_value!r}]"
@@ -196,9 +139,6 @@ class Equals:
 class NumberType:
     """A Union[float, int]; needed to align with the `number` type in
     OpenAPI, because isinstance(4, float) == False"""
-
-    def __init__(self):
-        self.sample_data = [100, 3.14]
 
     def flat_name(self):
         return "Union[float, int]"
@@ -209,7 +149,6 @@ class ListType:
     def __init__(self, sub_type: Any, length: int | None = None) -> None:
         self.sub_type = sub_type
         self.length = length
-        self.sample_data = [[item, item, item] for item in get_sample_data(sub_type)]
 
     def flat_name(self):
         return f"List[{get_flat_name(self.sub_type)}]"
@@ -221,10 +160,6 @@ class StringDictType:
 
     value_type: Any
 
-    def __init__(self, value_type):
-        self.sample_data = [dict(some_key=val) for val in get_sample_data(value_type)]
-        self.value_type = value_type
-
     def flat_name(self):
         return f"Dict[str, {get_flat_name(self.value_type)}]"
 
@@ -232,10 +167,6 @@ class StringDictType:
 @dataclass
 class OptionalType:
     sub_type: Any
-
-    def __init__(self, sub_type):
-        self.sample_data = [None] + get_sample_data(sub_type)
-        self.sub_type = sub_type
 
     def flat_name(self):
         return f"Optional[{get_flat_name(self.sub_type)}]"
@@ -248,21 +179,6 @@ class TupleType:
 
     sub_types: Sequence[Any]
 
-    def __init__(self, sub_types):
-        self.sub_types = sub_types
-        self.sample_data = [list()]
-        for data_type in sub_types:
-            new_sample_data = []
-            for new_val in get_sample_data(data_type):
-                for old_sample in self.sample_data:
-                    new_item = old_sample[:] + [new_val]
-                    new_sample_data.append(new_item)
-            self.sample_data = new_sample_data
-
-        self.sample_data = [tuple(lst) for lst in new_sample_data]
-        if len(self.sample_data) > 40:
-            self.sample_data = random.sample(self.sample_data, 40)
-
     def flat_name(self):
         sub_names = [get_flat_name(t) for t in self.sub_types]
         return f"Tuple[{", ".join(sub_names)}]"
@@ -271,23 +187,11 @@ class TupleType:
 class UnionType:
     sub_types: Sequence[Any]
 
-    def __init__(self, sub_types):
-        self.sub_types = sub_types
-        self.sample_data = []
-        for sub_type in sub_types:
-            self.sample_data += get_sample_data(sub_type)
-        if len(self.sample_data) > 40:
-            self.sample_data = random.sample(self.sample_data, 40)
-
-
     def flat_name(self):
         sub_names = [get_flat_name(t) for t in self.sub_types]
         return f"Union[{", ".join(sub_names)}]"
 
 class UrlType:
-    def __init__(self):
-        self.sample_data = ["http://example.com"]
-
     def flat_name(self):
         return "UrlType"
 
