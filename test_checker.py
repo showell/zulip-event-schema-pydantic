@@ -71,5 +71,3 @@ from zerver.lib.event_schema import (
     check_user_status,
     check_user_topic,
 )
-
-
