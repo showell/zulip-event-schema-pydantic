@@ -130,10 +130,11 @@ def validate_event_with_model_type(event, model):
 
 def make_checker(base_model):
     def f(name, event):
-        assert type(name) is str
+        # Note that we don't use `name` for debugging any more.
         validate_event_with_model_type(event, base_model)
 
     return f
+
 
 check_alert_words = make_checker(alert_words_event)
 check_attachment_add = make_checker(attachment_add_event)
