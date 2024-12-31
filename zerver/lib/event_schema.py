@@ -181,7 +181,7 @@ check_web_reload_client_event = make_checker(web_reload_client_event)
 
 # Now for the slightly more tricky bits.  All the following functions
 # get wrapped with more stringent checkers.  Some of the wrappers are
-# reaonably sane functions that just check the data, not the shape of
+# reasonably sane functions that just check the data, not the shape of
 # the data.
 #
 # But there are some ugly wrappers that work around the fact that
