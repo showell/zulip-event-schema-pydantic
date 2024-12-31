@@ -122,7 +122,10 @@ PERSON_TYPES = dict(
 )
 
 def validate_event_with_model_type(event, model):
-        model.model_validate(event, strict=True)
+    allowed_fields = set(model.__fields__.keys())
+    if not set(event.keys()).issubset(allowed_fields):
+        raise ValueError(f"Extra fields not allowed: {set(event.keys()) - allowed_fields}")
+    model.model_validate(event, strict=True)
 
 def make_checker(base_model):
     def f(name, event):
