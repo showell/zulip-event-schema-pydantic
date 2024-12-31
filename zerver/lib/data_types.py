@@ -130,6 +130,8 @@ class DictType:
 
         if self.optional_keys:
             superclass = name + "_core"
+            if not superclass.startswith("_"):
+                superclass = "_" + superclass
         else:
             superclass = name
 

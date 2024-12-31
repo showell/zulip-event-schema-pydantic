@@ -96,13 +96,13 @@ class default_streams_event(BaseModel):
     id: int
 
 
-class delete_message_event_core(BaseModel):
+class _delete_message_event_core(BaseModel):
     type: Literal["delete_message"]
     message_type: Literal["private", "stream"]
     id: int
 
 
-class delete_message_event(delete_message_event_core):
+class delete_message_event(_delete_message_event_core):
     # TODO: fix types to avoid optional fields
     message_id: Optional[int] = None
     message_ids: Optional[List[int]] = None
@@ -264,7 +264,7 @@ class _presence_type(BaseModel):
     pushable: bool
 
 
-class presence_event_core(BaseModel):
+class _presence_event_core(BaseModel):
     type: Literal["presence"]
     user_id: int
     server_timestamp: Union[float, int]
@@ -272,7 +272,7 @@ class presence_event_core(BaseModel):
     id: int
 
 
-class presence_event(presence_event_core):
+class presence_event(_presence_event_core):
     # TODO: fix types to avoid optional fields
     email: Optional[str] = None
 
@@ -793,7 +793,7 @@ class stream_delete_event(BaseModel):
     id: int
 
 
-class stream_update_event_core(BaseModel):
+class _stream_update_event_core(BaseModel):
     type: Literal["stream"]
     op: Literal["update"]
     property: str
@@ -803,7 +803,7 @@ class stream_update_event_core(BaseModel):
     id: int
 
 
-class stream_update_event(stream_update_event_core):
+class stream_update_event(_stream_update_event_core):
     # TODO: fix types to avoid optional fields
     rendered_description: Optional[str] = None
     history_public_to_subscribers: Optional[bool] = None
@@ -900,7 +900,7 @@ class _typing_person_type(BaseModel):
     user_id: int
 
 
-class typing_start_event_core(BaseModel):
+class _typing_start_event_core(BaseModel):
     type: Literal["typing"]
     op: Literal["start"]
     message_type: Literal["direct", "stream"]
@@ -908,14 +908,14 @@ class typing_start_event_core(BaseModel):
     id: int
 
 
-class typing_start_event(typing_start_event_core):
+class typing_start_event(_typing_start_event_core):
     # TODO: fix types to avoid optional fields
     recipients: Optional[List[_typing_person_type]] = None
     stream_id: Optional[int] = None
     topic: Optional[str] = None
 
 
-class typing_stop_event_core(BaseModel):
+class _typing_stop_event_core(BaseModel):
     type: Literal["typing"]
     op: Literal["stop"]
     message_type: Literal["direct", "stream"]
@@ -923,14 +923,14 @@ class typing_stop_event_core(BaseModel):
     id: int
 
 
-class typing_stop_event(typing_stop_event_core):
+class typing_stop_event(_typing_stop_event_core):
     # TODO: fix types to avoid optional fields
     recipients: Optional[List[_typing_person_type]] = None
     stream_id: Optional[int] = None
     topic: Optional[str] = None
 
 
-class update_display_settings_event_core(BaseModel):
+class _update_display_settings_event_core(BaseModel):
     type: Literal["update_display_settings"]
     setting_name: str
     setting: Union[bool, int, str]
@@ -938,7 +938,7 @@ class update_display_settings_event_core(BaseModel):
     id: int
 
 
-class update_display_settings_event(update_display_settings_event_core):
+class update_display_settings_event(_update_display_settings_event_core):
     # TODO: fix types to avoid optional fields
     language_name: Optional[str] = None
 
@@ -951,7 +951,7 @@ class update_global_notifications_event(BaseModel):
     id: int
 
 
-class update_message_event_core(BaseModel):
+class _update_message_event_core(BaseModel):
     type: Literal["update_message"]
     user_id: Optional[int]
     edit_timestamp: int
@@ -962,7 +962,7 @@ class update_message_event_core(BaseModel):
     id: int
 
 
-class update_message_event(update_message_event_core):
+class update_message_event(_update_message_event_core):
     # TODO: fix types to avoid optional fields
     stream_id: Optional[int] = None
     stream_name: Optional[str] = None
@@ -988,7 +988,7 @@ class update_message_flags_add_event(BaseModel):
     id: int
 
 
-class update_message_flags_remove_event_core(BaseModel):
+class _update_message_flags_remove_event_core(BaseModel):
     type: Literal["update_message_flags"]
     op: Literal["remove"]
     operation: Literal["remove"]
@@ -1011,7 +1011,7 @@ class _message_details(_message_details_core):
     unmuted_stream_msg: Optional[bool] = None
 
 
-class update_message_flags_remove_event(update_message_flags_remove_event_core):
+class update_message_flags_remove_event(_update_message_flags_remove_event_core):
     # TODO: fix types to avoid optional fields
     message_details: Optional[Dict[str, _message_details]] = None
 
@@ -1105,7 +1105,7 @@ class user_group_update_event(BaseModel):
     id: int
 
 
-class user_settings_update_event_core(BaseModel):
+class _user_settings_update_event_core(BaseModel):
     type: Literal["user_settings"]
     op: Literal["update"]
     property: str
@@ -1113,18 +1113,18 @@ class user_settings_update_event_core(BaseModel):
     id: int
 
 
-class user_settings_update_event(user_settings_update_event_core):
+class user_settings_update_event(_user_settings_update_event_core):
     # TODO: fix types to avoid optional fields
     language_name: Optional[str] = None
 
 
-class user_status_event_core(BaseModel):
+class _user_status_event_core(BaseModel):
     type: Literal["user_status"]
     user_id: int
     id: int
 
 
-class user_status_event(user_status_event_core):
+class user_status_event(_user_status_event_core):
     # TODO: fix types to avoid optional fields
     away: Optional[bool] = None
     status_text: Optional[str] = None
