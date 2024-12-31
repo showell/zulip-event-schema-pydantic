@@ -3,13 +3,20 @@ from zerver.lib.data_types import DictType, UnionType
 
 print(
     """
+from django.core.exceptions import ValidationError
+from django.core.validators import URLValidator
 from zerver.lib.types import AnonymousSettingGroupDict
-from pydantic import BaseModel
-from typing import Dict, List, Literal, Tuple, Optional, Union
+from pydantic import AfterValidator, BaseModel
+from typing import Annotated, Dict, List, Literal, Tuple, Optional, Union
 
-# TODO: Make this check for valid urls using URLValidator from django
-UrlType = str
+def check_url(val: str) -> str:
+    try:
+        URLValidator()(val)
+    except ValidationError:  # nocoverage
+        raise AssertionError(f"{val} is not a URL")
+    return val
 
+UrlType = Annotated[str, AfterValidator(check_url)]
 """
 )
 
