@@ -108,7 +108,7 @@ class DictType:
     def flat_name(self):
         return "Any"
 
-    def full_pydantic(self, *, name):
+    def print_full_pydantic(self, *, name):
         s = f"class {name}(BaseModel):\n"
 
         for key, data_type in self.required_keys:
@@ -116,7 +116,9 @@ class DictType:
 
         for key, data_type in self.optional_keys:
             s += f"    {key}: Optional[{get_flat_name(data_type)}] = None\n"
-        return s
+
+        s += "\n\n"
+        print(s)
 
     def check_data(self, var_name: str, val: dict[str, Any]) -> None:
         if not isinstance(val, dict):
