@@ -4,6 +4,7 @@ from typing import Any
 
 from zerver.lib.types import GroupPermissionSetting
 
+
 class Realm:
     pass
 
