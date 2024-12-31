@@ -3,13 +3,12 @@ from zerver.lib.data_types import DictType, UnionType
 
 print(
     """
+from zerver.lib.types import AnonymousSettingGroupDict
 from pydantic import BaseModel
 from typing import Dict, List, Literal, Tuple, Optional, Union
 
 # TODO: Make this check for valid urls using URLValidator from django
 UrlType = str
-
-from zerver.lib.types import AnonymousSettingGroupDict
 
 """
 )
