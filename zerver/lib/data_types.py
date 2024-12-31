@@ -86,6 +86,8 @@ class DictType:
                 self._name = "_detailed_custom_profile"
             if key == "direct_subgroups":
                 self._name = "_group_info"
+            if key == "stream_weekly_traffic":
+                self._name = "_basic_stream_fields"
 
     def make_sample_data(self):
         for key, data_type in self.required_keys:

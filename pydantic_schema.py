@@ -741,17 +741,38 @@ class scheduled_messages_update_event(BaseModel):
     id: int
 
 
+class _basic_stream_fields(BaseModel):
+    is_archived: bool
+    can_administer_channel_group: Union[int, _group_info]
+    can_remove_subscribers_group: Union[int, _group_info]
+    creator_id: Optional[int]
+    date_created: int
+    description: str
+    first_message_id: Optional[int]
+    is_recently_active: bool
+    history_public_to_subscribers: bool
+    invite_only: bool
+    is_announcement_only: bool
+    is_web_public: bool
+    message_retention_days: Optional[int]
+    name: str
+    rendered_description: str
+    stream_id: int
+    stream_post_policy: int
+    stream_weekly_traffic: Optional[int]
+
+
 class stream_create_event(BaseModel):
     type: Literal["stream"]
     op: Literal["create"]
-    streams: List[Any]
+    streams: List[_basic_stream_fields]
     id: int
 
 
 class stream_delete_event(BaseModel):
     type: Literal["stream"]
     op: Literal["delete"]
-    streams: List[Any]
+    streams: List[_basic_stream_fields]
     id: int
 
 
