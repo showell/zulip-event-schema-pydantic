@@ -1,3 +1,7 @@
+from pydantic import BaseModel
+from typing import Any, Dict, List, Literal, Tuple, Optional, Union
+
+
 class alert_words_event(BaseModel):
     type: Literal["alert_words"]
     alert_words: List[str]
