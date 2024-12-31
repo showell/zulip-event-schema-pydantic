@@ -70,7 +70,10 @@ class DictType:
         self.required_keys = required_keys
         self.optional_keys = optional_keys
         self.sample_data = [dict()]
-        for key, data_type in required_keys:
+        self.make_sample_data()
+
+    def make_sample_data(self):
+        for key, data_type in self.required_keys:
             new_sample_data = []
             for new_val in get_sample_data(data_type):
                 for old_sample in self.sample_data:
@@ -78,6 +81,25 @@ class DictType:
                     for k, v in old_sample.items():
                         new_item[k] = v
                     new_item[key] = new_val
+                    new_sample_data.append(new_item)
+            self.sample_data = new_sample_data
+            if len(self.sample_data) > 40:
+                self.sample_data = random.sample(self.sample_data, 40)
+
+        for key, data_type in self.optional_keys:
+            new_sample_data = []
+            for new_val in get_sample_data(data_type):
+                for old_sample in self.sample_data:
+                    new_item = dict()
+                    for k, v in old_sample.items():
+                        new_item[k] = v
+                    new_item[key] = new_val
+                    new_sample_data.append(new_item)
+                for old_sample in self.sample_data:
+                    new_item = dict()
+                    for k, v in old_sample.items():
+                        new_item[k] = v
+                    # LEAVE OUT KEY!
                     new_sample_data.append(new_item)
             self.sample_data = new_sample_data
             if len(self.sample_data) > 40:
