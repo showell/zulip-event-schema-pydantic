@@ -475,7 +475,7 @@ class _realm_user_type(BaseModel):
     is_guest: bool
     role: Literal[100, 200, 300, 400, 600]
     is_active: bool
-    profile_data: Dict[str, Any]
+    profile_data: Dict[str, Dict]
     timezone: str
     date_joined: str
     delivery_email: Optional[str]
