@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Any, Dict, List, Literal, Tuple, Optional, Union
 
+# TODO: Make this check for valid urls
 UrlType = str
 
 
