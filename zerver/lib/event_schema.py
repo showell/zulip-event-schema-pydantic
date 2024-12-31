@@ -5,6 +5,7 @@
 # by a test in test_events.py with a schema checker here.
 #
 # See https://zulip.readthedocs.io/en/latest/subsystems/events-system.html
+from zerver.lib.topic import ORIG_TOPIC, TOPIC_NAME
 from zerver.lib.types import AnonymousSettingGroupDict
 from zerver.models import Realm, RealmUserDefault, Stream, UserProfile
 
@@ -527,31 +528,61 @@ def check_update_message(
     _check_update_message(var_name, event)
 
     actual_keys = set(event.keys())
-    expected_keys = {"id"}
-    expected_keys.update(tup[0] for tup in update_message_required_fields)
+    expected_keys = {
+        "id",
+        "type",
+        "user_id",
+        "edit_timestamp",
+        "message_id",
+        "flags",
+        "message_ids",
+        "rendering_only",
+    }
 
     if is_stream_message:
-        expected_keys.update(tup[0] for tup in update_message_stream_fields)
+        expected_keys |= {
+            "stream_id",
+            "stream_name",
+        }
 
     if has_content:
-        expected_keys.update(tup[0] for tup in update_message_content_fields)
-        expected_keys.update(tup[0] for tup in update_message_content_or_embedded_data_fields)
+        expected_keys |= {
+            "is_me_message",
+            "orig_content",
+            "orig_rendered_content",
+            "content",
+            "rendered_content",
+        }
 
     if has_topic:
-        expected_keys.update(tup[0] for tup in update_message_topic_fields)
-        expected_keys.update(tup[0] for tup in update_message_change_stream_or_topic_fields)
+        expected_keys |= {
+            "topic_links",
+            ORIG_TOPIC,
+            TOPIC_NAME,
+            "propagate_mode",
+        }
 
     if has_new_stream_id:
-        expected_keys.update(tup[0] for tup in update_message_change_stream_fields)
-        expected_keys.update(tup[0] for tup in update_message_change_stream_or_topic_fields)
+        expected_keys |= {
+            "new_stream_id",
+            ORIG_TOPIC,
+            "propagate_mode",
+        }
 
     if is_embedded_update_only:
-        expected_keys.update(tup[0] for tup in update_message_content_or_embedded_data_fields)
+        expected_keys |= {
+            "content",
+            "rendered_content",
+        }
         assert event["user_id"] is None
     else:
         assert isinstance(event["user_id"], int)
 
     assert event["rendering_only"] == is_embedded_update_only
+    print(expected_keys)
+    print(actual_keys)
+    print(actual_keys - expected_keys)
+    print(expected_keys - actual_keys)
     assert expected_keys == actual_keys
 
 

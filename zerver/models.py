@@ -5,14 +5,6 @@ from typing import Any
 from zerver.lib.types import GroupPermissionSetting
 
 
-class Realm:
-    pass
-
-
-class RealmUserDefault:
-    pass
-
-
 class SystemGroups:
     FULL_MEMBERS = "role:fullmembers"
     EVERYONE_ON_INTERNET = "role:internet"
@@ -22,6 +14,167 @@ class SystemGroups:
     MEMBERS = "role:members"
     EVERYONE = "role:everyone"
     NOBODY = "role:nobody"
+
+
+class Realm:
+    property_types: dict[str, type | tuple[type, ...]] = dict(
+        allow_edit_history=bool,
+        allow_message_editing=bool,
+        avatar_changes_disabled=bool,
+        bot_creation_policy=int,
+        default_code_block_language=str,
+        default_language=str,
+        description=str,
+        digest_emails_enabled=bool,
+        digest_weekday=int,
+        disallow_disposable_email_addresses=bool,
+        email_changes_disabled=bool,
+        emails_restricted_to_domains=bool,
+        enable_guest_user_indicator=bool,
+        enable_read_receipts=bool,
+        enable_spectator_access=bool,
+        giphy_rating=int,
+        inline_image_preview=bool,
+        inline_url_embed_preview=bool,
+        invite_required=bool,
+        invite_to_stream_policy=int,
+        jitsi_server_url=(str, type(None)),
+        mandatory_topics=bool,
+        message_content_allowed_in_email_notifications=bool,
+        message_content_edit_limit_seconds=(int, type(None)),
+        message_content_delete_limit_seconds=(int, type(None)),
+        move_messages_between_streams_limit_seconds=(int, type(None)),
+        move_messages_within_stream_limit_seconds=(int, type(None)),
+        message_retention_days=(int, type(None)),
+        name=str,
+        name_changes_disabled=bool,
+        push_notifications_enabled=bool,
+        require_unique_names=bool,
+        send_welcome_emails=bool,
+        video_chat_provider=int,
+        waiting_period_threshold=int,
+        want_advertise_in_communities_directory=bool,
+        wildcard_mention_policy=int,
+    )
+
+    REALM_PERMISSION_GROUP_SETTINGS: dict[str, GroupPermissionSetting] = dict(
+        create_multiuse_invite_group=GroupPermissionSetting(
+            require_system_group=False,
+            allow_internet_group=False,
+            allow_nobody_group=True,
+            allow_everyone_group=False,
+            default_group_name=SystemGroups.ADMINISTRATORS,
+        ),
+        can_access_all_users_group=GroupPermissionSetting(
+            require_system_group=True,
+            allow_internet_group=False,
+            allow_nobody_group=False,
+            allow_everyone_group=True,
+            default_group_name=SystemGroups.EVERYONE,
+            allowed_system_groups=[SystemGroups.EVERYONE, SystemGroups.MEMBERS],
+        ),
+        can_add_custom_emoji_group=GroupPermissionSetting(
+            require_system_group=False,
+            allow_internet_group=False,
+            allow_nobody_group=True,
+            allow_everyone_group=False,
+            default_group_name=SystemGroups.MEMBERS,
+        ),
+        can_create_groups=GroupPermissionSetting(
+            require_system_group=False,
+            allow_internet_group=False,
+            allow_nobody_group=True,
+            allow_everyone_group=False,
+            default_group_name=SystemGroups.MEMBERS,
+        ),
+        can_create_public_channel_group=GroupPermissionSetting(
+            require_system_group=False,
+            allow_internet_group=False,
+            allow_nobody_group=True,
+            allow_everyone_group=False,
+            default_group_name=SystemGroups.MEMBERS,
+        ),
+        can_create_private_channel_group=GroupPermissionSetting(
+            require_system_group=False,
+            allow_internet_group=False,
+            allow_nobody_group=True,
+            allow_everyone_group=False,
+            default_group_name=SystemGroups.MEMBERS,
+        ),
+        can_create_web_public_channel_group=GroupPermissionSetting(
+            require_system_group=True,
+            allow_internet_group=False,
+            allow_nobody_group=True,
+            allow_everyone_group=False,
+            default_group_name=SystemGroups.OWNERS,
+            allowed_system_groups=[
+                SystemGroups.MODERATORS,
+                SystemGroups.ADMINISTRATORS,
+                SystemGroups.OWNERS,
+                SystemGroups.NOBODY,
+            ],
+        ),
+        can_delete_any_message_group=GroupPermissionSetting(
+            require_system_group=False,
+            allow_internet_group=False,
+            allow_nobody_group=True,
+            allow_everyone_group=False,
+            default_group_name=SystemGroups.ADMINISTRATORS,
+        ),
+        can_delete_own_message_group=GroupPermissionSetting(
+            require_system_group=False,
+            allow_internet_group=False,
+            allow_nobody_group=True,
+            allow_everyone_group=True,
+            default_group_name=SystemGroups.EVERYONE,
+        ),
+        can_invite_users_group=GroupPermissionSetting(
+            require_system_group=False,
+            allow_internet_group=False,
+            allow_nobody_group=True,
+            allow_everyone_group=False,
+            default_group_name=SystemGroups.MEMBERS,
+        ),
+        can_manage_all_groups=GroupPermissionSetting(
+            require_system_group=False,
+            allow_internet_group=False,
+            allow_nobody_group=False,
+            allow_everyone_group=False,
+            default_group_name=SystemGroups.OWNERS,
+        ),
+        can_move_messages_between_channels_group=GroupPermissionSetting(
+            require_system_group=False,
+            allow_internet_group=False,
+            allow_nobody_group=True,
+            allow_everyone_group=False,
+            default_group_name=SystemGroups.MEMBERS,
+        ),
+        can_move_messages_between_topics_group=GroupPermissionSetting(
+            require_system_group=False,
+            allow_internet_group=False,
+            allow_nobody_group=True,
+            allow_everyone_group=True,
+            default_group_name=SystemGroups.EVERYONE,
+        ),
+        direct_message_initiator_group=GroupPermissionSetting(
+            require_system_group=False,
+            allow_internet_group=False,
+            allow_nobody_group=True,
+            allow_everyone_group=True,
+            default_group_name=SystemGroups.EVERYONE,
+        ),
+        direct_message_permission_group=GroupPermissionSetting(
+            require_system_group=False,
+            allow_internet_group=False,
+            allow_nobody_group=True,
+            allow_everyone_group=True,
+            default_group_name=SystemGroups.EVERYONE,
+        ),
+    )
+
+
+class RealmUserDefault:
+    pass
 
 
 class Stream:
