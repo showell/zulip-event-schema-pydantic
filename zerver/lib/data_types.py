@@ -127,32 +127,6 @@ class DictType:
         s += "\n\n"
         print(s)
 
-    def check_data(self, var_name: str, val: dict[str, Any]) -> None:
-        if not isinstance(val, dict):
-            raise AssertionError(f"{var_name} is not a dict")
-
-        for k in val:
-            if not isinstance(k, str):
-                raise AssertionError(f"{var_name} has non-string key {k}")
-
-        for k, data_type in self.required_keys:
-            if k not in val:
-                raise AssertionError(f"{k} key is missing from {var_name}")
-            vname = f"{var_name}['{k}']"
-            check_data(data_type, vname, val[k])
-
-        for k, data_type in self.optional_keys:
-            if k in val:
-                vname = f"{var_name}['{k}']"
-                check_data(data_type, vname, val[k])
-
-        rkeys = {tup[0] for tup in self.required_keys}
-        okeys = {tup[0] for tup in self.optional_keys}
-        keys = rkeys | okeys
-        for k in val:
-            if k not in keys:
-                raise AssertionError(f"Unknown key {k} in {var_name}")
-
     def schema(self, var_name: str) -> str:
         # Our current schema is lossy, since our OpenAPI configs
         # aren't rigorous about "required" fields yet.
@@ -172,10 +146,6 @@ class EnumType:
         self.sample_data = valid_vals
         self.valid_vals = valid_vals
 
-    def check_data(self, var_name: str, val: dict[str, Any]) -> None:
-        if val not in self.valid_vals:
-            raise AssertionError(f"{var_name} is not in {self.valid_vals}")
-
     def schema(self, var_name: str) -> str:
         return f"{var_name} in {sorted(self.valid_vals)}"
 
@@ -194,10 +164,6 @@ class Equals:
             self.equalsNone = True
         self.sample_data = [expected_value]
 
-    def check_data(self, var_name: str, val: dict[str, Any]) -> None:
-        if val != self.expected_value:
-            raise AssertionError(f"{var_name} should be equal to {self.expected_value}")
-
     def schema(self, var_name: str) -> str:
         # Treat Equals as the degenerate case of EnumType, which
         # matches how we do things with OpenAPI.
@@ -214,11 +180,6 @@ class NumberType:
     def __init__(self):
         self.sample_data = [100, 3.14]
 
-    def check_data(self, var_name: str, val: Any | None) -> None:
-        if isinstance(val, int | float):
-            return
-        raise AssertionError(f"{var_name} is not a number")
-
     def schema(self, var_name: str) -> str:
         return f"{var_name}: number"
 
@@ -232,14 +193,6 @@ class ListType:
         self.sub_type = sub_type
         self.length = length
         self.sample_data = [[item, item, item] for item in get_sample_data(sub_type)]
-
-    def check_data(self, var_name: str, val: list[Any]) -> None:
-        if not isinstance(val, list):
-            raise AssertionError(f"{var_name} is not a list")
-
-        for i, sub_val in enumerate(val):
-            vname = f"{var_name}[{i}]"
-            check_data(self.sub_type, vname, sub_val)
 
     def schema(self, var_name: str) -> str:
         sub_schema = schema("type", self.sub_type)
@@ -259,16 +212,6 @@ class StringDictType:
         self.sample_data = [dict(some_key=val) for val in get_sample_data(value_type)]
         self.value_type = value_type
 
-    def check_data(self, var_name: str, val: dict[Any, Any]) -> None:
-        if not isinstance(val, dict):
-            raise AssertionError(f"{var_name} is not a dictionary")
-
-        for key, value in val.items():
-            if not isinstance(key, str):
-                raise AssertionError(f"{var_name} has a non-string key")
-
-            check_data(self.value_type, f"{var_name}[{key}]", value)
-
     def schema(self, var_name: str) -> str:
         sub_schema = schema("value", self.value_type)
         return f"{var_name} (string_dict):\n{indent(sub_schema)}"
@@ -284,11 +227,6 @@ class OptionalType:
     def __init__(self, sub_type):
         self.sample_data = [None] + get_sample_data(sub_type)
         self.sub_type = sub_type
-
-    def check_data(self, var_name: str, val: Any | None) -> None:
-        if val is None:
-            return
-        check_data(self.sub_type, var_name, val)
 
     def schema(self, var_name: str) -> str:
         # our OpenAPI spec doesn't support optional types very well yet,
@@ -321,17 +259,6 @@ class TupleType:
         if len(self.sample_data) > 40:
             self.sample_data = random.sample(self.sample_data, 40)
 
-    def check_data(self, var_name: str, val: Any) -> None:
-        if not isinstance(val, list | tuple):
-            raise AssertionError(f"{var_name} is not a list/tuple")
-
-        if len(val) != len(self.sub_types):
-            raise AssertionError(f"{var_name} should have {len(self.sub_types)} items")
-
-        for i, sub_type in enumerate(self.sub_types):
-            vname = f"{var_name}[{i}]"
-            check_data(sub_type, vname, val[i])
-
     def schema(self, var_name: str) -> str:
         sub_schemas = "\n".join(
             sorted(
@@ -356,16 +283,6 @@ class UnionType:
         if len(self.sample_data) > 40:
             self.sample_data = random.sample(self.sample_data, 40)
 
-    def check_data(self, var_name: str, val: Any) -> None:
-        for sub_type in self.sub_types:
-            with suppress(AssertionError):
-                check_data(sub_type, var_name, val)
-
-            # We matched on one of our sub_types, so return
-            return
-
-        raise AssertionError(f"{var_name} does not pass the union type check")
-
     def schema(self, var_name: str) -> str:
         # We hack around our OpenAPI specs not accounting for None.
         sub_schemas = "\n".join(
@@ -384,14 +301,6 @@ class UnionType:
 class UrlType:
     def __init__(self):
         self.sample_data = ["http://example.com"]
-
-    def check_data(self, var_name: str, val: Any) -> None:
-        """TODO
-        try:
-            URLValidator()(val)
-        except ValidationError:  # nocoverage
-            raise AssertionError(f"{var_name} is not a URL")
-        """
 
     def schema(self, var_name: str) -> str:
         # just report str to match OpenAPI
