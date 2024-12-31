@@ -71,3 +71,32 @@ from zerver.lib.event_schema import (
     check_user_status,
     check_user_topic,
 )
+
+from zerver.lib.types import AnonymousSettingGroupDict
+
+class VisibilityPolicyType:
+    def __init__(self):
+        self.MUTED = 1
+        self.UNMUTED = 2
+        self.FOLLOWED = 3
+        self.INHERIT = 0
+
+VisiblityPolicy = VisibilityPolicyType()
+
+class UserTopicType:
+    def __init__(self):
+        self.VisibilityPolicy = VisiblityPolicy
+
+UserTopic = UserTopicType()
+
+context = dict(
+    AnonymousSettingGroupDict=AnonymousSettingGroupDict,
+    UserTopic=UserTopic,
+)
+
+with open("real_world_checker_calls.txt", "r") as file:
+    for i, line in enumerate(file):
+        c = eval(line, context)
+        f = globals()[c["name"]]
+        print(i, c["name"])
+        f(*c["args"], **c["kwargs"])

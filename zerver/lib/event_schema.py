@@ -9,13 +9,6 @@ from zerver.lib.types import AnonymousSettingGroupDict
 from zerver.models import Realm, RealmUserDefault, Stream, UserProfile
 
 
-def make_checker(base_model):
-    def f(name, event):
-        base_model(event)
-
-    return f
-
-
 from pydantic_schema import (
     alert_words_event,
     attachment_add_event,
@@ -92,7 +85,40 @@ from pydantic_schema import (
     user_status_event,
     user_topic_event,
     web_reload_client_event,
+    _person_avatar_fields,
+    _person_bot_owner_id,
+    _person_custom_profile_field,
+    _person_delivery_email,
+    _person_email,
+    _person_full_name,
+    _person_is_billing_admin,
+    _person_role,
+    _person_timezone,
+    _person_is_active,
 )
+
+PERSON_TYPES = dict(
+    avatar_fields=_person_avatar_fields,
+    bot_owner_id=_person_bot_owner_id,
+    custom_profile_field=_person_custom_profile_field,
+    delivery_email=_person_delivery_email,
+    email=_person_email,
+    full_name=_person_full_name,
+    is_billing_admin=_person_is_billing_admin,
+    role=_person_role,
+    timezone=_person_timezone,
+    is_active=_person_is_active,
+)
+
+def make_checker(base_model):
+    def f(name, event):
+        print("name", name)
+        print("event", event)
+        print("base_model", base_model)
+        base_model(**event)
+
+    return f
+
 
 _check_delete_message = make_checker(delete_message_event)
 _check_has_zoom_token = make_checker(has_zoom_token_event)
@@ -187,7 +213,7 @@ def check_realm_bot_add(
     services = event["bot"]["services"]
 
     if bot_type == UserProfile.DEFAULT_BOT:
-        check_data(Equals([]), services_field, services)
+        assert services == []
     elif bot_type == UserProfile.OUTGOING_WEBHOOK_BOT:
         check_data(ListType(bot_services_outgoing_type, length=1), services_field, services)
     elif bot_type == UserProfile.EMBEDDED_BOT:
@@ -350,11 +376,8 @@ def check_realm_user_update(
 ) -> None:
     _check_realm_user_update(var_name, event)
 
-    check_data(
-        realm_user_person_types[person_flavor],
-        f"{var_name}['person']",
-        event["person"],
-    )
+    sub_type = PERSON_TYPES[person_flavor]
+    sub_type(**event["person"])
 
 
 def check_stream_update(
