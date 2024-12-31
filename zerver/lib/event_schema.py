@@ -95,6 +95,14 @@ from pydantic_schema import (
     _person_role,
     _person_timezone,
     _person_is_active,
+    _allow_message_editing_data,
+    _authentication_data,
+    _icon_data,
+    _logo_data,
+    _message_content_edit_limit_seconds_data,
+    _night_logo_data,
+    _group_setting_update_data_type,
+    _plan_type_data,
 )
 
 PERSON_TYPES = dict(
@@ -342,30 +350,30 @@ def check_realm_update_dict(
         assert isinstance(event["data"], dict)
 
         if "allow_message_editing" in event["data"]:
-            sub_type = allow_message_editing_data
+            sub_type = _allow_message_editing_data
         elif "message_content_edit_limit_seconds" in event["data"]:
-            sub_type = message_content_edit_limit_seconds_data
+            sub_type = _message_content_edit_limit_seconds_data
         elif "authentication_methods" in event["data"]:
-            sub_type = authentication_data
+            sub_type = _authentication_data
         elif any(
             setting_name in event["data"] for setting_name in Realm.REALM_PERMISSION_GROUP_SETTINGS
         ):
-            sub_type = group_setting_update_data_type
+            sub_type = _group_setting_update_data_type
         elif "plan_type" in event["data"]:
-            sub_type = plan_type_data
+            sub_type = _plan_type_data
         else:
             raise AssertionError("unhandled fields in data")
 
     elif event["property"] == "icon":
-        sub_type = icon_data
+        sub_type = _icon_data
     elif event["property"] == "logo":
-        sub_type = logo_data
+        sub_type = _logo_data
     elif event["property"] == "night_logo":
-        sub_type = night_logo_data
+        sub_type = _night_logo_data
     else:
         raise AssertionError("unhandled property: {event['property']}")
 
-    check_data(sub_type, f"{var_name}['data']", event["data"])
+    sub_type(**event["data"])
 
 
 def check_realm_user_update(

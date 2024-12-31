@@ -2,6 +2,7 @@
 
 from typing import Any
 
+from zerver.lib.types import GroupPermissionSetting
 
 class Realm:
     pass
@@ -11,8 +12,34 @@ class RealmUserDefault:
     pass
 
 
+class SystemGroups:
+    FULL_MEMBERS = "role:fullmembers"
+    EVERYONE_ON_INTERNET = "role:internet"
+    OWNERS = "role:owners"
+    ADMINISTRATORS = "role:administrators"
+    MODERATORS = "role:moderators"
+    MEMBERS = "role:members"
+    EVERYONE = "role:everyone"
+    NOBODY = "role:nobody"
+
+
 class Stream:
-    pass
+    stream_permission_group_settings = {
+        "can_administer_channel_group": GroupPermissionSetting(
+            require_system_group=False,
+            allow_internet_group=False,
+            allow_nobody_group=True,
+            allow_everyone_group=False,
+            default_group_name="stream_creator_or_nobody",
+        ),
+        "can_remove_subscribers_group": GroupPermissionSetting(
+            require_system_group=False,
+            allow_internet_group=False,
+            allow_nobody_group=True,
+            allow_everyone_group=True,
+            default_group_name=SystemGroups.ADMINISTRATORS,
+        ),
+    }
 
 
 class UserProfile:
