@@ -225,7 +225,6 @@ def check_realm_bot_add(
     assert isinstance(event["bot"], dict)
     bot_type = event["bot"]["bot_type"]
 
-    services_field = f"{var_name}['bot']['services']"
     services = event["bot"]["services"]
 
     if bot_type == UserProfile.DEFAULT_BOT:
