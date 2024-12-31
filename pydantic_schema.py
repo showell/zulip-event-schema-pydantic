@@ -33,10 +33,14 @@ class attachment_add_event(BaseModel):
     id: int
 
 
+class _attachment_remove_event__attachment(BaseModel):
+    id: int
+
+
 class attachment_remove_event(BaseModel):
     type: Literal["attachment"]
     op: Literal["remove"]
-    attachment: Any
+    attachment: _attachment_remove_event__attachment
     upload_space_used: int
     id: int
 
@@ -86,10 +90,43 @@ class delete_message_event(BaseModel):
     topic: Optional[str] = None
 
 
+class _topic_links(BaseModel):
+    text: str
+    url: str
+
+
+class _direct_message_display_recipient(BaseModel):
+    id: int
+    is_mirror_dummy: bool
+    email: str
+    full_name: str
+
+
+class _direct_message_event__message(BaseModel):
+    avatar_url: Optional[str]
+    client: str
+    content: str
+    content_type: Literal["text/html"]
+    id: int
+    is_me_message: bool
+    reactions: List[Dict]
+    recipient_id: int
+    sender_realm_str: str
+    sender_email: str
+    sender_full_name: str
+    sender_id: int
+    subject: str
+    topic_links: List[_topic_links]
+    submessages: List[Dict]
+    timestamp: int
+    type: str
+    display_recipient: List[_direct_message_display_recipient]
+
+
 class direct_message_event(BaseModel):
     type: Literal["message"]
     flags: List[str]
-    message: Any
+    message: _direct_message_event__message
     id: int
 
 
@@ -141,10 +178,32 @@ class invites_changed_event(BaseModel):
     id: int
 
 
+class _message_event__message(BaseModel):
+    avatar_url: Optional[str]
+    client: str
+    content: str
+    content_type: Literal["text/html"]
+    id: int
+    is_me_message: bool
+    reactions: List[Dict]
+    recipient_id: int
+    sender_realm_str: str
+    sender_email: str
+    sender_full_name: str
+    sender_id: int
+    subject: str
+    topic_links: List[_topic_links]
+    submessages: List[Dict]
+    timestamp: int
+    type: str
+    display_recipient: str
+    stream_id: int
+
+
 class message_event(BaseModel):
     type: Literal["message"]
     flags: List[str]
-    message: Any
+    message: _message_event__message
     id: int
 
 
@@ -752,11 +811,6 @@ class update_global_notifications_event(BaseModel):
     setting: Union[bool, int, str]
     user: str
     id: int
-
-
-class _topic_links(BaseModel):
-    text: str
-    url: str
 
 
 class update_message_event(BaseModel):

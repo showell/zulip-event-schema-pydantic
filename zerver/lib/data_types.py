@@ -119,6 +119,8 @@ class DictType:
         s = f"class {name}(BaseModel):\n"
 
         for key, data_type in self.required_keys:
+            if type(data_type) is DictType and not hasattr(data_type, "_name"):
+                data_type._name = "_" + name + "__" + key
             s += f"    {key}: {get_flat_name(data_type)}\n"
 
         if self.optional_keys:
