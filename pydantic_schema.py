@@ -104,7 +104,7 @@ class delete_message_event(BaseModel):
     topic: Optional[str] = None
 
 
-class _topic_links(BaseModel):
+class _topic_link(BaseModel):
     text: str
     url: str
 
@@ -130,7 +130,7 @@ class _direct_message_event__message(BaseModel):
     sender_full_name: str
     sender_id: int
     subject: str
-    topic_links: List[_topic_links]
+    topic_links: List[_topic_link]
     submessages: List[Dict]
     timestamp: int
     type: str
@@ -206,7 +206,7 @@ class _message_event__message(BaseModel):
     sender_full_name: str
     sender_id: int
     subject: str
-    topic_links: List[_topic_links]
+    topic_links: List[_topic_link]
     submessages: List[Dict]
     timestamp: int
     type: str
@@ -944,7 +944,7 @@ class update_message_event(BaseModel):
     orig_rendered_content: Optional[str] = None
     content: Optional[str] = None
     rendered_content: Optional[str] = None
-    topic_links: Optional[List[_topic_links]] = None
+    topic_links: Optional[List[_topic_link]] = None
     subject: Optional[str] = None
     new_stream_id: Optional[int] = None
     propagate_mode: Optional[Literal["change_one", "change_later", "change_all"]] = None

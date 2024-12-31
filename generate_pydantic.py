@@ -16,6 +16,8 @@ module_dict = zerver.lib.event_schema.__dict__
 
 
 def fix_name(k):
+    if "topic_links" in k:
+        k = "_topic_link"
     if k.startswith("_check_"):
         k = k.replace("_check_", "")
     if not k.startswith("_"):
