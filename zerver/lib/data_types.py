@@ -29,6 +29,13 @@ def indent(s: str) -> str:
     return "\n".join(padding + part for part in parts)
 
 def get_flat_name(data_type):
+    if hasattr(data_type, "_name"):
+        if not hasattr(data_type, "_persisted"):
+            data_type.print_full_pydantic(name=data_type._name)
+            data_type._persisted = True
+        return data_type._name
+    if data_type is dict:
+        return "Any"
     if data_type is int:
         return "int"
     if data_type is str:
@@ -425,6 +432,7 @@ def make_checker(
     def f(var_name: str, event: dict[str, Any]) -> None:
         check_data(data_type, var_name, event)
 
+    data_type.__is_for_checker = True
     return f
 
 

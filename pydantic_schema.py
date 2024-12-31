@@ -1,6 +1,8 @@
 from pydantic import BaseModel
 from typing import Any, Dict, List, Literal, Tuple, Optional, Union
 
+UrlType = str
+
 
 class alert_words_event(BaseModel):
     type: Literal["alert_words"]
@@ -8,10 +10,24 @@ class alert_words_event(BaseModel):
     id: int
 
 
+class _attachment_message_type(BaseModel):
+    id: int
+    date_sent: int
+
+
+class _attachment_type(BaseModel):
+    id: int
+    name: str
+    size: int
+    path_id: str
+    create_time: int
+    messages: List[_attachment_message_type]
+
+
 class attachment_add_event(BaseModel):
     type: Literal["attachment"]
     op: Literal["add"]
-    attachment: Any
+    attachment: _attachment_type
     upload_space_used: int
     id: int
 
@@ -27,7 +43,7 @@ class attachment_remove_event(BaseModel):
 class attachment_update_event(BaseModel):
     type: Literal["attachment"]
     op: Literal["update"]
-    attachment: Any
+    attachment: _attachment_type
     upload_space_used: int
     id: int
 
@@ -38,9 +54,16 @@ class custom_profile_fields_event(BaseModel):
     id: int
 
 
+class _stream_group(BaseModel):
+    name: str
+    id: int
+    description: str
+    streams: List[int]
+
+
 class default_stream_groups_event(BaseModel):
     type: Literal["default_stream_groups"]
-    default_stream_groups: List[Any]
+    default_stream_groups: List[_stream_group]
     id: int
 
 
@@ -67,10 +90,19 @@ class direct_message_event(BaseModel):
     id: int
 
 
+class _draft_fields(BaseModel):
+    id: int
+    type: Literal["", "stream", "private"]
+    to: List[int]
+    topic: str
+    content: str
+    timestamp: Optional[int] = None
+
+
 class drafts_add_event(BaseModel):
     type: Literal["drafts"]
     op: Literal["add"]
-    drafts: List[Any]
+    drafts: List[_draft_fields]
     id: int
 
 
@@ -84,7 +116,7 @@ class drafts_remove_event(BaseModel):
 class drafts_update_event(BaseModel):
     type: Literal["drafts"]
     op: Literal["update"]
-    draft: Any
+    draft: _draft_fields
     id: int
 
 
@@ -117,23 +149,40 @@ class muted_topics_event(BaseModel):
     id: int
 
 
+class _muted_user_type(BaseModel):
+    id: int
+    timestamp: int
+
+
 class muted_users_event(BaseModel):
     type: Literal["muted_users"]
-    muted_users: List[Any]
+    muted_users: List[_muted_user_type]
     id: int
+
+
+class _onboarding_steps(BaseModel):
+    type: str
+    name: str
 
 
 class onboarding_steps_event(BaseModel):
     type: Literal["onboarding_steps"]
-    onboarding_steps: List[Any]
+    onboarding_steps: List[_onboarding_steps]
     id: int
+
+
+class _presence_type(BaseModel):
+    status: Literal["active", "idle"]
+    timestamp: int
+    client: str
+    pushable: bool
 
 
 class presence_event(BaseModel):
     type: Literal["presence"]
     user_id: int
     server_timestamp: Union[float, int]
-    presence: Dict[str, Any]
+    presence: Dict[str, _presence_type]
     id: int
     email: Optional[str] = None
 
@@ -160,24 +209,67 @@ class reaction_remove_event(BaseModel):
     id: int
 
 
+class _bot_services_outgoing_type(BaseModel):
+    base_url: UrlType
+    interface: int
+    token: str
+
+
+class _bot_services_embedded_type(BaseModel):
+    service_name: str
+    config_data: Dict[str, str]
+
+
+class _bot_type(BaseModel):
+    user_id: int
+    api_key: str
+    avatar_url: str
+    bot_type: int
+    default_all_public_streams: bool
+    default_events_register_stream: Optional[str]
+    default_sending_stream: Optional[str]
+    email: str
+    full_name: str
+    is_active: bool
+    owner_id: int
+    services: List[Union[_bot_services_outgoing_type, _bot_services_embedded_type]]
+
+
 class realm_bot_add_event(BaseModel):
     type: Literal["realm_bot"]
     op: Literal["add"]
-    bot: Any
+    bot: _bot_type
     id: int
+
+
+class _bot_type_for_delete(BaseModel):
+    user_id: int
 
 
 class realm_bot_delete_event(BaseModel):
     type: Literal["realm_bot"]
     op: Literal["delete"]
-    bot: Any
+    bot: _bot_type_for_delete
     id: int
+
+
+class _bot_type_for_update(BaseModel):
+    user_id: int
+    api_key: Optional[str] = None
+    avatar_url: Optional[str] = None
+    default_all_public_streams: Optional[bool] = None
+    default_events_register_stream: Optional[Optional[str]] = None
+    default_sending_stream: Optional[Optional[str]] = None
+    full_name: Optional[str] = None
+    is_active: Optional[bool] = None
+    owner_id: Optional[int] = None
+    services: Optional[List[Union[_bot_services_outgoing_type, _bot_services_embedded_type]]] = None
 
 
 class realm_bot_update_event(BaseModel):
     type: Literal["realm_bot"]
     op: Literal["update"]
-    bot: Any
+    bot: _bot_type_for_update
     id: int
 
 
@@ -188,17 +280,22 @@ class realm_deactivated_event(BaseModel):
     id: int
 
 
+class _realm_domain_type(BaseModel):
+    domain: str
+    allow_subdomains: bool
+
+
 class realm_domains_add_event(BaseModel):
     type: Literal["realm_domains"]
     op: Literal["add"]
-    realm_domain: Any
+    realm_domain: _realm_domain_type
     id: int
 
 
 class realm_domains_change_event(BaseModel):
     type: Literal["realm_domains"]
     op: Literal["change"]
-    realm_domain: Any
+    realm_domain: _realm_domain_type
     id: int
 
 
@@ -209,10 +306,19 @@ class realm_domains_remove_event(BaseModel):
     id: int
 
 
+class _realm_emoji_type(BaseModel):
+    id: str
+    name: str
+    source_url: str
+    deactivated: bool
+    author_id: int
+    still_url: Optional[str]
+
+
 class realm_emoji_update_event(BaseModel):
     type: Literal["realm_emoji"]
     op: Literal["update"]
-    realm_emoji: Dict[str, Any]
+    realm_emoji: Dict[str, _realm_emoji_type]
     id: int
 
 
@@ -223,29 +329,127 @@ class realm_export_consent_event(BaseModel):
     id: int
 
 
+class _export_type(BaseModel):
+    id: int
+    export_time: Union[float, int]
+    acting_user_id: int
+    export_url: Optional[str]
+    deleted_timestamp: Optional[Union[float, int]]
+    failed_timestamp: Optional[Union[float, int]]
+    pending: bool
+    export_type: int
+
+
 class realm_export_event(BaseModel):
     type: Literal["realm_export"]
-    exports: List[Any]
+    exports: List[_export_type]
+    id: int
+
+
+class _realm_linkifier_type(BaseModel):
+    pattern: str
+    url_template: str
     id: int
 
 
 class realm_linkifiers_event(BaseModel):
     type: Literal["realm_linkifiers"]
-    realm_linkifiers: List[Any]
+    realm_linkifiers: List[_realm_linkifier_type]
     id: int
+
+
+class _realm_playground_type(BaseModel):
+    id: int
+    name: str
+    pygments_language: str
+    url_template: str
 
 
 class realm_playgrounds_event(BaseModel):
     type: Literal["realm_playgrounds"]
-    realm_playgrounds: List[Any]
+    realm_playgrounds: List[_realm_playground_type]
     id: int
+
+
+class _allow_message_editing_data(BaseModel):
+    allow_message_editing: bool
+
+
+class _authentication_method_dict(BaseModel):
+    enabled: bool
+    available: bool
+    unavailable_reason: Optional[str] = None
+
+
+class _authentication_dict(BaseModel):
+    Google: _authentication_method_dict
+    Dev: _authentication_method_dict
+    LDAP: _authentication_method_dict
+    GitHub: _authentication_method_dict
+    Email: _authentication_method_dict
+
+
+class _authentication_data(BaseModel):
+    authentication_methods: _authentication_dict
+
+
+class _icon_data(BaseModel):
+    icon_url: str
+    icon_source: str
+
+
+class _logo_data(BaseModel):
+    logo_url: str
+    logo_source: str
+
+
+class _message_content_edit_limit_seconds_data(BaseModel):
+    message_content_edit_limit_seconds: Optional[int]
+
+
+class _night_logo_data(BaseModel):
+    night_logo_url: str
+    night_logo_source: str
+
+
+class _group_setting_update_data_type(BaseModel):
+    create_multiuse_invite_group: Optional[Union[int, Any]] = None
+    can_access_all_users_group: Optional[Union[int, Any]] = None
+    can_add_custom_emoji_group: Optional[Union[int, Any]] = None
+    can_create_groups: Optional[Union[int, Any]] = None
+    can_create_public_channel_group: Optional[Union[int, Any]] = None
+    can_create_private_channel_group: Optional[Union[int, Any]] = None
+    can_create_web_public_channel_group: Optional[Union[int, Any]] = None
+    can_delete_any_message_group: Optional[Union[int, Any]] = None
+    can_delete_own_message_group: Optional[Union[int, Any]] = None
+    can_invite_users_group: Optional[Union[int, Any]] = None
+    can_manage_all_groups: Optional[Union[int, Any]] = None
+    can_move_messages_between_channels_group: Optional[Union[int, Any]] = None
+    can_move_messages_between_topics_group: Optional[Union[int, Any]] = None
+    direct_message_initiator_group: Optional[Union[int, Any]] = None
+    direct_message_permission_group: Optional[Union[int, Any]] = None
+
+
+class _plan_type_data(BaseModel):
+    plan_type: int
+    upload_quota_mib: Optional[int]
+    max_file_upload_size_mib: int
 
 
 class realm_update_dict_event(BaseModel):
     type: Literal["realm"]
     op: Literal["update_dict"]
     property: Literal["default", "icon", "logo", "night_logo"]
-    data: Union[Any, Any, Any, Any, Any, Any, Any, Any]
+    data: Union[
+        _allow_message_editing_data,
+        _authentication_data,
+        _icon_data,
+        _logo_data,
+        _message_content_edit_limit_seconds_data,
+        _night_logo_data,
+        _group_setting_update_data_type,
+        _plan_type_data,
+    ]
     id: int
 
 
@@ -257,17 +461,41 @@ class realm_update_event(BaseModel):
     id: int
 
 
+class _realm_user_type(BaseModel):
+    user_id: int
+    email: str
+    avatar_url: Optional[str]
+    avatar_version: int
+    full_name: str
+    is_admin: bool
+    is_billing_admin: bool
+    is_owner: bool
+    is_bot: bool
+    is_guest: bool
+    role: Literal[100, 200, 300, 400, 600]
+    is_active: bool
+    profile_data: Dict[str, Any]
+    timezone: str
+    date_joined: str
+    delivery_email: Optional[str]
+
+
 class realm_user_add_event(BaseModel):
     type: Literal["realm_user"]
     op: Literal["add"]
-    person: Any
+    person: _realm_user_type
     id: int
+
+
+class _removed_user_type(BaseModel):
+    user_id: int
+    full_name: str
 
 
 class realm_user_remove_event(BaseModel):
     type: Literal["realm_user"]
     op: Literal["remove"]
-    person: Any
+    person: _removed_user_type
     id: int
 
 
@@ -295,10 +523,17 @@ class restart_event(BaseModel):
     id: int
 
 
+class _saved_snippet_fields(BaseModel):
+    id: int
+    title: str
+    content: str
+    date_created: int
+
+
 class saved_snippet_add_event(BaseModel):
     type: Literal["saved_snippets"]
     op: Literal["add"]
-    saved_snippet: Any
+    saved_snippet: _saved_snippet_fields
     id: int
 
 
@@ -309,10 +544,21 @@ class saved_snippet_remove_event(BaseModel):
     id: int
 
 
+class _scheduled_message_fields(BaseModel):
+    scheduled_message_id: int
+    type: Literal["stream", "private"]
+    to: Union[List[int], int]
+    content: str
+    rendered_content: str
+    scheduled_delivery_timestamp: int
+    failed: bool
+    topic: Optional[str] = None
+
+
 class scheduled_messages_add_event(BaseModel):
     type: Literal["scheduled_messages"]
     op: Literal["add"]
-    scheduled_messages: List[Any]
+    scheduled_messages: List[_scheduled_message_fields]
     id: int
 
 
@@ -326,7 +572,7 @@ class scheduled_messages_remove_event(BaseModel):
 class scheduled_messages_update_event(BaseModel):
     type: Literal["scheduled_messages"]
     op: Literal["update"]
-    scheduled_message: Any
+    scheduled_message: _scheduled_message_fields
     id: int
 
 
@@ -367,10 +613,41 @@ class submessage_event(BaseModel):
     id: int
 
 
+class _single_subscription_type(BaseModel):
+    is_archived: bool
+    can_administer_channel_group: Union[int, Any]
+    can_remove_subscribers_group: Union[int, Any]
+    creator_id: Optional[int]
+    date_created: int
+    description: str
+    first_message_id: Optional[int]
+    is_recently_active: bool
+    history_public_to_subscribers: bool
+    invite_only: bool
+    is_announcement_only: bool
+    is_web_public: bool
+    message_retention_days: Optional[int]
+    name: str
+    rendered_description: str
+    stream_id: int
+    stream_post_policy: int
+    stream_weekly_traffic: Optional[int]
+    audible_notifications: Optional[bool]
+    color: str
+    desktop_notifications: Optional[bool]
+    email_notifications: Optional[bool]
+    in_home_view: bool
+    is_muted: bool
+    pin_to_top: bool
+    push_notifications: Optional[bool]
+    subscribers: List[int]
+    wildcard_mentions_notify: Optional[bool]
+
+
 class subscription_add_event(BaseModel):
     type: Literal["subscription"]
     op: Literal["add"]
-    subscriptions: List[Any]
+    subscriptions: List[_single_subscription_type]
     id: int
 
 
@@ -390,10 +667,15 @@ class subscription_peer_remove_event(BaseModel):
     id: int
 
 
+class _remove_sub_type(BaseModel):
+    name: str
+    stream_id: int
+
+
 class subscription_remove_event(BaseModel):
     type: Literal["subscription"]
     op: Literal["remove"]
-    subscriptions: List[Any]
+    subscriptions: List[_remove_sub_type]
     id: int
 
 
@@ -406,13 +688,18 @@ class subscription_update_event(BaseModel):
     id: int
 
 
+class _typing_person_type(BaseModel):
+    email: str
+    user_id: int
+
+
 class typing_start_event(BaseModel):
     type: Literal["typing"]
     op: Literal["start"]
     message_type: Literal["direct", "stream"]
-    sender: Any
+    sender: _typing_person_type
     id: int
-    recipients: Optional[List[Any]] = None
+    recipients: Optional[List[_typing_person_type]] = None
     stream_id: Optional[int] = None
     topic: Optional[str] = None
 
@@ -421,9 +708,9 @@ class typing_stop_event(BaseModel):
     type: Literal["typing"]
     op: Literal["stop"]
     message_type: Literal["direct", "stream"]
-    sender: Any
+    sender: _typing_person_type
     id: int
-    recipients: Optional[List[Any]] = None
+    recipients: Optional[List[_typing_person_type]] = None
     stream_id: Optional[int] = None
     topic: Optional[str] = None
 
@@ -445,6 +732,11 @@ class update_global_notifications_event(BaseModel):
     id: int
 
 
+class _topic_links(BaseModel):
+    text: str
+    url: str
+
+
 class update_message_event(BaseModel):
     type: Literal["update_message"]
     user_id: Optional[int]
@@ -461,7 +753,7 @@ class update_message_event(BaseModel):
     orig_rendered_content: Optional[str] = None
     content: Optional[str] = None
     rendered_content: Optional[str] = None
-    topic_links: Optional[List[Any]] = None
+    topic_links: Optional[List[_topic_links]] = None
     subject: Optional[str] = None
     new_stream_id: Optional[int] = None
     propagate_mode: Optional[Literal["change_one", "change_later", "change_all"]] = None
@@ -489,10 +781,28 @@ class update_message_flags_remove_event(BaseModel):
     message_details: Optional[Dict[str, Any]] = None
 
 
+class _group_type(BaseModel):
+    id: int
+    name: str
+    creator_id: Optional[int]
+    date_created: Optional[int]
+    members: List[int]
+    direct_subgroup_ids: List[int]
+    description: str
+    is_system_group: bool
+    can_add_members_group: Union[int, Any]
+    can_join_group: Union[int, Any]
+    can_leave_group: Union[int, Any]
+    can_manage_group: Union[int, Any]
+    can_mention_group: Union[int, Any]
+    can_remove_members_group: Union[int, Any]
+    deactivated: bool
+
+
 class user_group_add_event(BaseModel):
     type: Literal["user_group"]
     op: Literal["add"]
-    group: Any
+    group: _group_type
     id: int
 
 
@@ -535,11 +845,23 @@ class user_group_remove_subgroups_event(BaseModel):
     id: int
 
 
+class _user_group_data_type(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    can_add_members_group: Optional[Union[int, Any]] = None
+    can_join_group: Optional[Union[int, Any]] = None
+    can_leave_group: Optional[Union[int, Any]] = None
+    can_manage_group: Optional[Union[int, Any]] = None
+    can_mention_group: Optional[Union[int, Any]] = None
+    can_remove_members_group: Optional[Union[int, Any]] = None
+    deactivated: Optional[bool] = None
+
+
 class user_group_update_event(BaseModel):
     type: Literal["user_group"]
     op: Literal["update"]
     group_id: int
-    data: Any
+    data: _user_group_data_type
     id: int
 
 
