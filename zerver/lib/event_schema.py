@@ -85,6 +85,8 @@ from pydantic_schema import (
     user_status_event,
     user_topic_event,
     web_reload_client_event,
+    _bot_services_outgoing_type,
+    _bot_services_embedded_type,
     _person_avatar_fields,
     _person_bot_owner_id,
     _person_custom_profile_field,
@@ -223,9 +225,13 @@ def check_realm_bot_add(
     if bot_type == UserProfile.DEFAULT_BOT:
         assert services == []
     elif bot_type == UserProfile.OUTGOING_WEBHOOK_BOT:
-        check_data(ListType(bot_services_outgoing_type, length=1), services_field, services)
+        sub_type = _bot_services_outgoing_type
+        assert len(services) == 1
+        sub_type(**services[0])
     elif bot_type == UserProfile.EMBEDDED_BOT:
-        check_data(ListType(bot_services_embedded_type, length=1), services_field, services)
+        sub_type = _bot_services_embedded_type
+        assert len(services) == 1
+        sub_type(**services[0])
     else:
         raise AssertionError(f"Unknown bot_type: {bot_type}")
 
