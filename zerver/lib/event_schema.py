@@ -143,7 +143,6 @@ def check_delete_message(
 
     assert set(event.keys()) == keys
 
-
 def check_has_zoom_token(
     var_name: str,
     event: dict[str, object],
@@ -205,9 +204,6 @@ def check_realm_bot_update(
     assert isinstance(event["bot"], dict)
     assert {"user_id", field} == set(event["bot"].keys())
 
-
-
-
 def check_realm_emoji_update(var_name: str, event: dict[str, object]) -> None:
     """
     The way we send realm emojis is kinda clumsy--we
@@ -221,8 +217,6 @@ def check_realm_emoji_update(var_name: str, event: dict[str, object]) -> None:
     assert isinstance(event["realm_emoji"], dict)
     for k, v in event["realm_emoji"].items():
         assert v["id"] == k
-
-
 
 def check_realm_export(
     var_name: str,
@@ -245,10 +239,6 @@ def check_realm_export(
     assert has_export_url == (export["export_url"] is not None)
     assert has_deleted_timestamp == (export["deleted_timestamp"] is not None)
     assert has_failed_timestamp == (export["failed_timestamp"] is not None)
-
-
-
-
 
 def check_realm_update(
     var_name: str,
@@ -292,8 +282,6 @@ def check_realm_update(
     else:
         raise AssertionError(f"Unexpected property type {property_type}")
 
-
-
 def check_realm_default_update(
     var_name: str,
     event: dict[str, object],
@@ -307,7 +295,6 @@ def check_realm_default_update(
 
     prop_type = RealmUserDefault.property_types[prop]
     assert isinstance(event["value"], prop_type)
-
 
 def check_realm_update_dict(
     # handle union types
@@ -359,7 +346,6 @@ def check_realm_user_update(
         f"{var_name}['person']",
         event["person"],
     )
-
 
 
 def check_stream_update(
@@ -416,7 +402,6 @@ def check_subscription_update(
     _check_subscription_update(var_name, event)
     assert event["property"] == property
     assert event["value"] == value
-
 
 
 def check_update_display_settings(
