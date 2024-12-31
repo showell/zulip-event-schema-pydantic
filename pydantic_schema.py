@@ -988,16 +988,6 @@ class update_message_flags_add_event(BaseModel):
     id: int
 
 
-class _update_message_flags_remove_event_core(BaseModel):
-    type: Literal["update_message_flags"]
-    op: Literal["remove"]
-    operation: Literal["remove"]
-    flag: str
-    messages: List[int]
-    all: bool
-    id: int
-
-
 class _message_details_core(BaseModel):
     type: Literal["private", "stream"]
 
@@ -1009,6 +999,16 @@ class _message_details(_message_details_core):
     stream_id: Optional[int] = None
     topic: Optional[str] = None
     unmuted_stream_msg: Optional[bool] = None
+
+
+class _update_message_flags_remove_event_core(BaseModel):
+    type: Literal["update_message_flags"]
+    op: Literal["remove"]
+    operation: Literal["remove"]
+    flag: str
+    messages: List[int]
+    all: bool
+    id: int
 
 
 class update_message_flags_remove_event(_update_message_flags_remove_event_core):

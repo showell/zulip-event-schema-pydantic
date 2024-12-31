@@ -128,6 +128,13 @@ class DictType:
         if name == "AnonymousSettingGroupDict":
             return
 
+        # Get all subtpes written first as a side effect.
+        for key, data_type in self.required_keys:
+            get_flat_name(data_type)
+
+        for key, data_type in self.optional_keys:
+            get_flat_name(data_type)
+
         if self.optional_keys:
             superclass = name + "_core"
             if not superclass.startswith("_"):
