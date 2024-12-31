@@ -20,6 +20,7 @@ from pydantic_schema import (
     attachment_remove_event,
     attachment_update_event,
     custom_profile_fields_event,
+    default_stream_groups_event,
     default_streams_event,
     delete_message_event,
     direct_message_event,
@@ -544,6 +545,7 @@ check_attachment_add = make_checker(attachment_add_event)
 check_attachment_remove = make_checker(attachment_remove_event)
 check_attachment_update = make_checker(attachment_update_event)
 check_custom_profile_fields = make_checker(custom_profile_fields_event)
+check_default_stream_groups = make_checker(default_stream_groups_event)
 check_default_streams = make_checker(default_streams_event)
 check_direct_message = make_checker(direct_message_event)
 check_draft_add = make_checker(drafts_add_event)
