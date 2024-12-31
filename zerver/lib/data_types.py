@@ -280,6 +280,7 @@ class TupleType:
                 for old_sample in self.sample_data:
                     new_item = old_sample[:] + [new_val]
                     new_sample_data.append(new_item)
+            self.sample_data = new_sample_data
 
         self.sample_data = [tuple(lst) for lst in new_sample_data]
         if len(self.sample_data) > 40:
