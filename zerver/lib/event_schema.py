@@ -8,6 +8,89 @@
 from zerver.lib.types import AnonymousSettingGroupDict
 from zerver.models import Realm, RealmUserDefault, Stream, UserProfile
 
+def make_checker(base_model):
+    def f(name, event):
+        base_model(event)
+
+    return f
+    
+from pydantic_schema import (
+    alert_words_event,
+    attachment_add_event,
+    attachment_remove_event,
+    attachment_update_event,
+    custom_profile_fields_event,
+    default_streams_event,
+    delete_message_event,
+    direct_message_event,
+    drafts_add_event,
+    drafts_remove_event,
+    drafts_update_event,
+    has_zoom_token_event,
+    heartbeat_event,
+    invites_changed_event,
+    message_event,
+    muted_topics_event,
+    muted_users_event,
+    onboarding_steps_event,
+    presence_event,
+    reaction_add_event,
+    reaction_remove_event,
+    realm_bot_add_event,
+    realm_bot_delete_event,
+    realm_bot_update_event,
+    realm_deactivated_event,
+    realm_domains_add_event,
+    realm_domains_change_event,
+    realm_domains_remove_event,
+    realm_emoji_update_event,
+    realm_export_consent_event,
+    realm_export_event,
+    realm_linkifiers_event,
+    realm_playgrounds_event,
+    realm_update_dict_event,
+    realm_update_event,
+    realm_user_add_event,
+    realm_user_remove_event,
+    realm_user_settings_defaults_update_event,
+    realm_user_update_event,
+    restart_event,
+    saved_snippet_add_event,
+    saved_snippet_add_event,
+    saved_snippet_remove_event,
+    saved_snippet_remove_event,
+    scheduled_messages_add_event,
+    scheduled_messages_remove_event,
+    scheduled_messages_update_event,
+    stream_create_event,
+    stream_delete_event,
+    stream_update_event,
+    submessage_event,
+    subscription_add_event,
+    subscription_peer_add_event,
+    subscription_peer_remove_event,
+    subscription_remove_event,
+    subscription_update_event,
+    typing_start_event,
+    typing_stop_event,
+    update_display_settings_event,
+    update_global_notifications_event,
+    update_message_event,
+    update_message_flags_add_event,
+    update_message_flags_remove_event,
+    user_group_add_event,
+    user_group_add_members_event,
+    user_group_add_subgroups_event,
+    user_group_remove_event,
+    user_group_remove_members_event,
+    user_group_remove_subgroups_event,
+    user_group_update_event,
+    user_settings_update_event,
+    user_status_event,
+    user_topic_event,
+    web_reload_client_event,
+)
+
 _check_delete_message = make_checker(delete_message_event)
 _check_has_zoom_token = make_checker(has_zoom_token_event)
 _check_presence = make_checker(presence_event)
@@ -464,10 +547,7 @@ check_custom_profile_fields = make_checker(custom_profile_fields_event)
 check_default_streams = make_checker(default_streams_event)
 check_direct_message = make_checker(direct_message_event)
 check_draft_add = make_checker(drafts_add_event)
-check_draft_add = make_checker(drafts_add_event)
 check_draft_remove = make_checker(drafts_remove_event)
-check_draft_remove = make_checker(drafts_remove_event)
-check_draft_update = make_checker(drafts_update_event)
 check_draft_update = make_checker(drafts_update_event)
 check_heartbeat = make_checker(heartbeat_event)
 check_invites_changed = make_checker(invites_changed_event)
