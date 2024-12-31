@@ -121,11 +121,13 @@ PERSON_TYPES = dict(
     is_active=_person_is_active,
 )
 
+def validate_event_with_model_type(event, model):
+        model.model_validate(event, strict=True)
 
 def make_checker(base_model):
     def f(name, event):
         assert type(name) is str
-        base_model(**event)
+        validate_event_with_model_type(event, base_model)
 
     return f
 
@@ -226,10 +228,10 @@ def check_realm_bot_add(
         assert services == []
     elif bot_type == UserProfile.OUTGOING_WEBHOOK_BOT:
         assert len(services) == 1
-        _bot_services_outgoing_type(**services[0])
+        validate_event_with_model_type(services[0], _bot_services_outgoing_type)
     elif bot_type == UserProfile.EMBEDDED_BOT:
         assert len(services) == 1
-        _bot_services_embedded_type(**services[0])
+        validate_event_with_model_type(services[0], _bot_services_embedded_type)
     else:
         raise AssertionError(f"Unknown bot_type: {bot_type}")
 
@@ -377,7 +379,7 @@ def check_realm_update_dict(
     else:
         raise AssertionError("unhandled property: {event['property']}")
 
-    sub_type(**event["data"])
+    validate_event_with_model_type(event["data"], sub_type)
 
 
 def check_realm_user_update(
@@ -389,7 +391,7 @@ def check_realm_user_update(
     _check_realm_user_update(var_name, event)
 
     sub_type = PERSON_TYPES[person_flavor]
-    sub_type(**event["person"])
+    validate_event_with_model_type(event["person"], sub_type)
 
 
 def check_stream_update(
