@@ -24,11 +24,6 @@ from django.core.validators import URLValidator
 
 PERSISTED_NAMES = set("AnonymousSettingGroupDict")
 
-def indent(s: str) -> str:
-    padding = "    "
-    parts = s.split("\n")
-    return "\n".join(padding + part for part in parts)
-
 def get_flat_name(data_type):
     if hasattr(data_type, "_name"):
         if data_type._name not in PERSISTED_NAMES:
@@ -133,21 +128,31 @@ class DictType:
         if name == "AnonymousSettingGroupDict":
             return
 
-        s = f"class {name}(BaseModel):\n"
+        if self.optional_keys:
+            superclass = name + "_core"
+        else:
+            superclass = name
+
+        s = f"class {superclass}(BaseModel):\n"
+
+        if not self.required_keys:
+            s += "    pass \n"
 
         for key, data_type in self.required_keys:
             if type(data_type) is DictType and not hasattr(data_type, "_name"):
                 data_type._name = "_" + name + "__" + key
             s += f"    {key}: {get_flat_name(data_type)}\n"
+        s += "\n\n"
+
+        print(s)
 
         if self.optional_keys:
+            s = f"\n class {name}({superclass}):\n"
             s += "\n    # TODO: fix types to avoid optional fields\n"
             for key, data_type in self.optional_keys:
                 s += f"    {key}: Optional[{get_flat_name(data_type)}] = None\n"
-
-        s += "\n\n"
-        print(s)
-
+            s += "\n\n"
+            print(s)
 
 
 @dataclass
