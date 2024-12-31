@@ -89,6 +89,10 @@ class DictType:
             if key == "stream_weekly_traffic":
                 self._name = "_basic_stream_fields"
 
+        for key, data_type in self.optional_keys:
+            if key == "unmuted_stream_msg":
+                self._name = "_message_details"
+
     def make_sample_data(self):
         for key, data_type in self.required_keys:
             new_sample_data = []

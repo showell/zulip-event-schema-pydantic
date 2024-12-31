@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Any, Dict, List, Literal, Tuple, Optional, Union
+from typing import Dict, List, Literal, Tuple, Optional, Union
 
 # TODO: Make this check for valid urls using URLValidator from django
 UrlType = str
@@ -961,6 +961,17 @@ class update_message_flags_add_event(BaseModel):
     id: int
 
 
+class _message_details(BaseModel):
+    type: Literal["private", "stream"]
+
+    # TODO: fix types to avoid optional fields
+    mentioned: Optional[bool] = None
+    user_ids: Optional[List[int]] = None
+    stream_id: Optional[int] = None
+    topic: Optional[str] = None
+    unmuted_stream_msg: Optional[bool] = None
+
+
 class update_message_flags_remove_event(BaseModel):
     type: Literal["update_message_flags"]
     op: Literal["remove"]
@@ -971,7 +982,7 @@ class update_message_flags_remove_event(BaseModel):
     id: int
 
     # TODO: fix types to avoid optional fields
-    message_details: Optional[Dict[str, Any]] = None
+    message_details: Optional[Dict[str, _message_details]] = None
 
 
 class _group_type(BaseModel):

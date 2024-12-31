@@ -4,7 +4,7 @@ from zerver.lib.data_types import DictType, UnionType
 print(
     """
 from pydantic import BaseModel
-from typing import Any, Dict, List, Literal, Tuple, Optional, Union
+from typing import Dict, List, Literal, Tuple, Optional, Union
 
 # TODO: Make this check for valid urls using URLValidator from django
 UrlType = str
