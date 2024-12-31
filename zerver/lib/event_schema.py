@@ -106,19 +106,6 @@ from zerver.lib.event_types import (
     web_reload_client_event,
 )
 
-PERSON_TYPES = dict(
-    avatar_fields=_person_avatar_fields,
-    bot_owner_id=_person_bot_owner_id,
-    custom_profile_field=_person_custom_profile_field,
-    delivery_email=_person_delivery_email,
-    email=_person_email,
-    full_name=_person_full_name,
-    is_billing_admin=_person_is_billing_admin,
-    role=_person_role,
-    timezone=_person_timezone,
-    is_active=_person_is_active,
-)
-
 
 def validate_event_with_model_type(event, model):
     allowed_fields = set(model.__fields__.keys())
@@ -223,6 +210,20 @@ _check_update_message = make_checker(update_message_event)
 _check_user_group_update = make_checker(user_group_update_event)
 _check_user_settings_update = make_checker(user_settings_update_event)
 _check_user_status = make_checker(user_status_event)
+
+
+PERSON_TYPES = dict(
+    avatar_fields=_person_avatar_fields,
+    bot_owner_id=_person_bot_owner_id,
+    custom_profile_field=_person_custom_profile_field,
+    delivery_email=_person_delivery_email,
+    email=_person_email,
+    full_name=_person_full_name,
+    is_billing_admin=_person_is_billing_admin,
+    role=_person_role,
+    timezone=_person_timezone,
+    is_active=_person_is_active,
+)
 
 
 def check_delete_message(
