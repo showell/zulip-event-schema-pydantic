@@ -28,10 +28,9 @@ def fix_name(k):
         k = "_topic_link"
     if k.startswith("_check_"):
         k = k.replace("_check_", "")
-    if not k.startswith("_"):
-        k = "_" + k
     if k.endswith("_type"):
         k = k.replace("_type", "")
+    k = k.replace('_', ' ').strip().title().replace(' ', '')
     return k
 
 
