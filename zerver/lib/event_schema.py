@@ -5,12 +5,8 @@
 # by a test in test_events.py with a schema checker here.
 #
 # See https://zulip.readthedocs.io/en/latest/subsystems/events-system.html
-from zerver.lib.topic import ORIG_TOPIC, TOPIC_NAME
-from zerver.lib.types import AnonymousSettingGroupDict
-from zerver.models import Realm, RealmUserDefault, Stream, UserProfile
-
-from pydantic import BaseModel
-from typing import cast, Any, Callable
+from collections.abc import Callable
+from typing import Any, cast
 
 from zerver.lib.event_types import (
     _allow_message_editing_data,
@@ -107,8 +103,12 @@ from zerver.lib.event_types import (
     user_topic_event,
     web_reload_client_event,
 )
+from zerver.lib.topic import ORIG_TOPIC, TOPIC_NAME
+from zerver.lib.types import AnonymousSettingGroupDict
+from zerver.models import Realm, RealmUserDefault, Stream, UserProfile
 
 EventModel = Any
+
 
 def validate_event_with_model_type(event: dict[str, object], model: EventModel) -> None:
     allowed_fields = set(model.__fields__.keys())
@@ -215,7 +215,7 @@ _check_user_settings_update = make_checker(user_settings_update_event)
 _check_user_status = make_checker(user_status_event)
 
 
-PERSON_TYPES : dict[str, EventModel] = dict(
+PERSON_TYPES: dict[str, EventModel] = dict(
     avatar_fields=_person_avatar_fields,
     bot_owner_id=_person_bot_owner_id,
     custom_profile_field=_person_custom_profile_field,
@@ -431,7 +431,7 @@ def check_realm_update_dict(
         assert isinstance(event["data"], dict)
 
         if "allow_message_editing" in event["data"]:
-            sub_type : EventModel = _allow_message_editing_data
+            sub_type: EventModel = _allow_message_editing_data
         elif "message_content_edit_limit_seconds" in event["data"]:
             sub_type = _message_content_edit_limit_seconds_data
         elif "authentication_methods" in event["data"]:
