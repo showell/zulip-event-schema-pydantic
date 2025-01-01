@@ -37,7 +37,7 @@ def fix_name(k):
 for k in module_dict:
     if k == "realm_user_person_types":
         for flavor, data_type in module_dict[k].items():
-            data_type._name = "_person_" + flavor
+            data_type._name = fix_name("person_" + flavor)
         continue
 
     v = module_dict[k]
