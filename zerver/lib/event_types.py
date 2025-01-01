@@ -277,7 +277,7 @@ class _presence_event_core(BaseModel):
     type: Literal["presence"]
     user_id: int
     server_timestamp: Union[float, int]
-    presence: Dict[str, _presence_type]
+    presence: dict[str, _presence_type]
     id: int
 
 
@@ -316,7 +316,7 @@ class _bot_services_outgoing_type(BaseModel):
 
 class _bot_services_embedded_type(BaseModel):
     service_name: str
-    config_data: Dict[str, str]
+    config_data: dict[str, str]
 
 
 class _bot_type(BaseModel):
@@ -421,7 +421,7 @@ class _realm_emoji_type(BaseModel):
 class realm_emoji_update_event(BaseModel):
     type: Literal["realm_emoji"]
     op: Literal["update"]
-    realm_emoji: Dict[str, _realm_emoji_type]
+    realm_emoji: dict[str, _realm_emoji_type]
     id: int
 
 
@@ -586,7 +586,7 @@ class _realm_user_type(BaseModel):
     is_guest: bool
     role: Literal[100, 200, 300, 400, 600]
     is_active: bool
-    profile_data: Dict[str, dict[str, object]]
+    profile_data: dict[str, dict[str, object]]
     timezone: str
     date_joined: str
     delivery_email: Optional[str]
@@ -1022,7 +1022,7 @@ class _update_message_flags_remove_event_core(BaseModel):
 
 class update_message_flags_remove_event(_update_message_flags_remove_event_core):
     # TODO: fix types to avoid optional fields
-    message_details: Optional[Dict[str, _message_details]] = None
+    message_details: Optional[dict[str, _message_details]] = None
 
 
 class _group_type(BaseModel):

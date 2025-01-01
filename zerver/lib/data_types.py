@@ -161,7 +161,7 @@ class StringDictType:
     value_type: Any
 
     def flat_name(self):
-        return f"Dict[str, {get_flat_name(self.value_type)}]"
+        return f"dict[str, {get_flat_name(self.value_type)}]"
 
 
 @dataclass
