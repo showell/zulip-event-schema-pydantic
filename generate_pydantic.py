@@ -30,6 +30,8 @@ def fix_name(k):
         k = k.replace("_check_", "")
     if not k.startswith("_"):
         k = "_" + k
+    if k.endswith("_type"):
+        k = k.replace("_type", "")
     return k
 
 

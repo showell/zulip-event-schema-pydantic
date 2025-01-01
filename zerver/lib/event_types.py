@@ -22,24 +22,24 @@ class alert_words_event(BaseModel):
     id: int
 
 
-class _attachment_message_type(BaseModel):
+class _attachment_message(BaseModel):
     id: int
     date_sent: int
 
 
-class _attachment_type(BaseModel):
+class _attachment(BaseModel):
     id: int
     name: str
     size: int
     path_id: str
     create_time: int
-    messages: List[_attachment_message_type]
+    messages: List[_attachment_message]
 
 
 class attachment_add_event(BaseModel):
     type: Literal["attachment"]
     op: Literal["add"]
-    attachment: _attachment_type
+    attachment: _attachment
     upload_space_used: int
     id: int
 
@@ -59,7 +59,7 @@ class attachment_remove_event(BaseModel):
 class attachment_update_event(BaseModel):
     type: Literal["attachment"]
     op: Literal["update"]
-    attachment: _attachment_type
+    attachment: _attachment
     upload_space_used: int
     id: int
 
@@ -244,14 +244,14 @@ class muted_topics_event(BaseModel):
     id: int
 
 
-class _muted_user_type(BaseModel):
+class _muted_user(BaseModel):
     id: int
     timestamp: int
 
 
 class muted_users_event(BaseModel):
     type: Literal["muted_users"]
-    muted_users: List[_muted_user_type]
+    muted_users: List[_muted_user]
     id: int
 
 
@@ -266,7 +266,7 @@ class onboarding_steps_event(BaseModel):
     id: int
 
 
-class _presence_type(BaseModel):
+class _presence(BaseModel):
     status: Literal["active", "idle"]
     timestamp: int
     client: str
@@ -277,7 +277,7 @@ class _presence_event_core(BaseModel):
     type: Literal["presence"]
     user_id: int
     server_timestamp: Union[float, int]
-    presence: dict[str, _presence_type]
+    presence: dict[str, _presence]
     id: int
 
 
@@ -308,18 +308,18 @@ class reaction_remove_event(BaseModel):
     id: int
 
 
-class _bot_services_outgoing_type(BaseModel):
+class _bot_services_outgoing(BaseModel):
     base_url: Url
     interface: int
     token: str
 
 
-class _bot_services_embedded_type(BaseModel):
+class _bot_services_embedded(BaseModel):
     service_name: str
     config_data: dict[str, str]
 
 
-class _bot_type(BaseModel):
+class _bot(BaseModel):
     user_id: int
     api_key: str
     avatar_url: str
@@ -331,13 +331,13 @@ class _bot_type(BaseModel):
     full_name: str
     is_active: bool
     owner_id: int
-    services: List[Union[_bot_services_outgoing_type, _bot_services_embedded_type]]
+    services: List[Union[_bot_services_outgoing, _bot_services_embedded]]
 
 
 class realm_bot_add_event(BaseModel):
     type: Literal["realm_bot"]
     op: Literal["add"]
-    bot: _bot_type
+    bot: _bot
     id: int
 
 
@@ -366,7 +366,7 @@ class _bot_type_for_update(_bot_type_for_update_core):
     full_name: Optional[str] = None
     is_active: Optional[bool] = None
     owner_id: Optional[int] = None
-    services: Optional[List[Union[_bot_services_outgoing_type, _bot_services_embedded_type]]] = None
+    services: Optional[List[Union[_bot_services_outgoing, _bot_services_embedded]]] = None
 
 
 class realm_bot_update_event(BaseModel):
@@ -383,7 +383,7 @@ class realm_deactivated_event(BaseModel):
     id: int
 
 
-class _realm_domain_type(BaseModel):
+class _realm_domain(BaseModel):
     domain: str
     allow_subdomains: bool
 
@@ -391,14 +391,14 @@ class _realm_domain_type(BaseModel):
 class realm_domains_add_event(BaseModel):
     type: Literal["realm_domains"]
     op: Literal["add"]
-    realm_domain: _realm_domain_type
+    realm_domain: _realm_domain
     id: int
 
 
 class realm_domains_change_event(BaseModel):
     type: Literal["realm_domains"]
     op: Literal["change"]
-    realm_domain: _realm_domain_type
+    realm_domain: _realm_domain
     id: int
 
 
@@ -409,7 +409,7 @@ class realm_domains_remove_event(BaseModel):
     id: int
 
 
-class _realm_emoji_type(BaseModel):
+class _realm_emoji(BaseModel):
     id: str
     name: str
     source_url: str
@@ -421,7 +421,7 @@ class _realm_emoji_type(BaseModel):
 class realm_emoji_update_event(BaseModel):
     type: Literal["realm_emoji"]
     op: Literal["update"]
-    realm_emoji: dict[str, _realm_emoji_type]
+    realm_emoji: dict[str, _realm_emoji]
     id: int
 
 
@@ -432,7 +432,7 @@ class realm_export_consent_event(BaseModel):
     id: int
 
 
-class _export_type(BaseModel):
+class _export(BaseModel):
     id: int
     export_time: Union[float, int]
     acting_user_id: int
@@ -445,11 +445,11 @@ class _export_type(BaseModel):
 
 class realm_export_event(BaseModel):
     type: Literal["realm_export"]
-    exports: List[_export_type]
+    exports: List[_export]
     id: int
 
 
-class _realm_linkifier_type(BaseModel):
+class _realm_linkifier(BaseModel):
     pattern: str
     url_template: str
     id: int
@@ -457,11 +457,11 @@ class _realm_linkifier_type(BaseModel):
 
 class realm_linkifiers_event(BaseModel):
     type: Literal["realm_linkifiers"]
-    realm_linkifiers: List[_realm_linkifier_type]
+    realm_linkifiers: List[_realm_linkifier]
     id: int
 
 
-class _realm_playground_type(BaseModel):
+class _realm_playground(BaseModel):
     id: int
     name: str
     pygments_language: str
@@ -470,7 +470,7 @@ class _realm_playground_type(BaseModel):
 
 class realm_playgrounds_event(BaseModel):
     type: Literal["realm_playgrounds"]
-    realm_playgrounds: List[_realm_playground_type]
+    realm_playgrounds: List[_realm_playground]
     id: int
 
 
@@ -519,11 +519,11 @@ class _night_logo_data(BaseModel):
     night_logo_source: str
 
 
-class _group_setting_update_data_type_core(BaseModel):
+class _group_setting_update_data_core(BaseModel):
     pass
 
 
-class _group_setting_update_data_type(_group_setting_update_data_type_core):
+class _group_setting_update_data(_group_setting_update_data_core):
     # TODO: fix types to avoid optional fields
     create_multiuse_invite_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
     can_access_all_users_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
@@ -559,7 +559,7 @@ class realm_update_dict_event(BaseModel):
         _logo_data,
         _message_content_edit_limit_seconds_data,
         _night_logo_data,
-        _group_setting_update_data_type,
+        _group_setting_update_data,
         _plan_type_data,
     ]
     id: int
@@ -573,7 +573,7 @@ class realm_update_event(BaseModel):
     id: int
 
 
-class _realm_user_type(BaseModel):
+class _realm_user(BaseModel):
     user_id: int
     email: str
     avatar_url: Optional[str]
@@ -595,11 +595,11 @@ class _realm_user_type(BaseModel):
 class realm_user_add_event(BaseModel):
     type: Literal["realm_user"]
     op: Literal["add"]
-    person: _realm_user_type
+    person: _realm_user
     id: int
 
 
-class _removed_user_type(BaseModel):
+class _removed_user(BaseModel):
     user_id: int
     full_name: str
 
@@ -607,7 +607,7 @@ class _removed_user_type(BaseModel):
 class realm_user_remove_event(BaseModel):
     type: Literal["realm_user"]
     op: Literal["remove"]
-    person: _removed_user_type
+    person: _removed_user
     id: int
 
 
@@ -632,19 +632,19 @@ class _person_bot_owner_id(BaseModel):
     bot_owner_id: int
 
 
-class _custom_profile_field_type_core(BaseModel):
+class _custom_profile_field_core(BaseModel):
     id: int
     value: Optional[str]
 
 
-class _custom_profile_field_type(_custom_profile_field_type_core):
+class _custom_profile_field(_custom_profile_field_core):
     # TODO: fix types to avoid optional fields
     rendered_value: Optional[str] = None
 
 
 class _person_custom_profile_field(BaseModel):
     user_id: int
-    custom_profile_field: _custom_profile_field_type
+    custom_profile_field: _custom_profile_field
 
 
 class _person_delivery_email(BaseModel):
@@ -829,7 +829,7 @@ class submessage_event(BaseModel):
     id: int
 
 
-class _single_subscription_type(BaseModel):
+class _single_subscription(BaseModel):
     is_archived: bool
     can_administer_channel_group: Union[int, AnonymousSettingGroupDict]
     can_remove_subscribers_group: Union[int, AnonymousSettingGroupDict]
@@ -863,7 +863,7 @@ class _single_subscription_type(BaseModel):
 class subscription_add_event(BaseModel):
     type: Literal["subscription"]
     op: Literal["add"]
-    subscriptions: List[_single_subscription_type]
+    subscriptions: List[_single_subscription]
     id: int
 
 
@@ -883,7 +883,7 @@ class subscription_peer_remove_event(BaseModel):
     id: int
 
 
-class _remove_sub_type(BaseModel):
+class _remove_sub(BaseModel):
     name: str
     stream_id: int
 
@@ -891,7 +891,7 @@ class _remove_sub_type(BaseModel):
 class subscription_remove_event(BaseModel):
     type: Literal["subscription"]
     op: Literal["remove"]
-    subscriptions: List[_remove_sub_type]
+    subscriptions: List[_remove_sub]
     id: int
 
 
@@ -904,7 +904,7 @@ class subscription_update_event(BaseModel):
     id: int
 
 
-class _typing_person_type(BaseModel):
+class _typing_person(BaseModel):
     email: str
     user_id: int
 
@@ -913,13 +913,13 @@ class _typing_start_event_core(BaseModel):
     type: Literal["typing"]
     op: Literal["start"]
     message_type: Literal["direct", "stream"]
-    sender: _typing_person_type
+    sender: _typing_person
     id: int
 
 
 class typing_start_event(_typing_start_event_core):
     # TODO: fix types to avoid optional fields
-    recipients: Optional[List[_typing_person_type]] = None
+    recipients: Optional[List[_typing_person]] = None
     stream_id: Optional[int] = None
     topic: Optional[str] = None
 
@@ -928,13 +928,13 @@ class _typing_stop_event_core(BaseModel):
     type: Literal["typing"]
     op: Literal["stop"]
     message_type: Literal["direct", "stream"]
-    sender: _typing_person_type
+    sender: _typing_person
     id: int
 
 
 class typing_stop_event(_typing_stop_event_core):
     # TODO: fix types to avoid optional fields
-    recipients: Optional[List[_typing_person_type]] = None
+    recipients: Optional[List[_typing_person]] = None
     stream_id: Optional[int] = None
     topic: Optional[str] = None
 
@@ -1025,7 +1025,7 @@ class update_message_flags_remove_event(_update_message_flags_remove_event_core)
     message_details: Optional[dict[str, _message_details]] = None
 
 
-class _group_type(BaseModel):
+class _group(BaseModel):
     id: int
     name: str
     creator_id: Optional[int]
@@ -1046,7 +1046,7 @@ class _group_type(BaseModel):
 class user_group_add_event(BaseModel):
     type: Literal["user_group"]
     op: Literal["add"]
-    group: _group_type
+    group: _group
     id: int
 
 
@@ -1089,11 +1089,11 @@ class user_group_remove_subgroups_event(BaseModel):
     id: int
 
 
-class _user_group_data_type_core(BaseModel):
+class _user_group_data_core(BaseModel):
     pass
 
 
-class _user_group_data_type(_user_group_data_type_core):
+class _user_group_data(_user_group_data_core):
     # TODO: fix types to avoid optional fields
     name: Optional[str] = None
     description: Optional[str] = None
@@ -1110,7 +1110,7 @@ class user_group_update_event(BaseModel):
     type: Literal["user_group"]
     op: Literal["update"]
     group_id: int
-    data: _user_group_data_type
+    data: _user_group_data
     id: int
 
 

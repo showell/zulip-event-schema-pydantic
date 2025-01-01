@@ -13,9 +13,9 @@ from zerver.models import Realm, RealmUserDefault, Stream, UserProfile
 from zerver.lib.event_types import (
     _allow_message_editing_data,
     _authentication_data,
-    _bot_services_embedded_type,
-    _bot_services_outgoing_type,
-    _group_setting_update_data_type,
+    _bot_services_embedded,
+    _bot_services_outgoing,
+    _group_setting_update_data,
     _icon_data,
     _logo_data,
     _message_content_edit_limit_seconds_data,
@@ -300,10 +300,10 @@ def check_realm_bot_add(
         assert services == []
     elif bot_type == UserProfile.OUTGOING_WEBHOOK_BOT:
         assert len(services) == 1
-        validate_event_with_model_type(services[0], _bot_services_outgoing_type)
+        validate_event_with_model_type(services[0], _bot_services_outgoing)
     elif bot_type == UserProfile.EMBEDDED_BOT:
         assert len(services) == 1
-        validate_event_with_model_type(services[0], _bot_services_embedded_type)
+        validate_event_with_model_type(services[0], _bot_services_embedded)
     else:
         raise AssertionError(f"Unknown bot_type: {bot_type}")
 
@@ -436,7 +436,7 @@ def check_realm_update_dict(
         elif any(
             setting_name in event["data"] for setting_name in Realm.REALM_PERMISSION_GROUP_SETTINGS
         ):
-            sub_type = _group_setting_update_data_type
+            sub_type = _group_setting_update_data
         elif "plan_type" in event["data"]:
             sub_type = _plan_type_data
         else:
