@@ -138,7 +138,7 @@ class _direct_message_event__message(BaseModel):
     content_type: Literal["text/html"]
     id: int
     is_me_message: bool
-    reactions: List[Dict]
+    reactions: List[dict[str, object]]
     recipient_id: int
     sender_realm_str: str
     sender_email: str
@@ -146,7 +146,7 @@ class _direct_message_event__message(BaseModel):
     sender_id: int
     subject: str
     topic_links: List[_topic_link]
-    submessages: List[Dict]
+    submessages: List[dict[str, object]]
     timestamp: int
     type: str
     display_recipient: List[_direct_message_display_recipient]
@@ -216,7 +216,7 @@ class _message_event__message(BaseModel):
     content_type: Literal["text/html"]
     id: int
     is_me_message: bool
-    reactions: List[Dict]
+    reactions: List[dict[str, object]]
     recipient_id: int
     sender_realm_str: str
     sender_email: str
@@ -224,7 +224,7 @@ class _message_event__message(BaseModel):
     sender_id: int
     subject: str
     topic_links: List[_topic_link]
-    submessages: List[Dict]
+    submessages: List[dict[str, object]]
     timestamp: int
     type: str
     display_recipient: str
@@ -586,7 +586,7 @@ class _realm_user_type(BaseModel):
     is_guest: bool
     role: Literal[100, 200, 300, 400, 600]
     is_active: bool
-    profile_data: Dict[str, Dict]
+    profile_data: Dict[str, dict[str, object]]
     timezone: str
     date_joined: str
     delivery_email: Optional[str]

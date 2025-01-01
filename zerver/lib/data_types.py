@@ -31,7 +31,7 @@ def get_flat_name(data_type):
             PERSISTED_NAMES.add(data_type._name)
         return data_type._name
     if data_type is dict:
-        return "Dict"
+        return "dict[str, object]"
     if data_type is int:
         return "int"
     if data_type is str:
