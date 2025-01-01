@@ -9,6 +9,8 @@ from zerver.lib.topic import ORIG_TOPIC, TOPIC_NAME
 from zerver.lib.types import AnonymousSettingGroupDict
 from zerver.models import Realm, RealmUserDefault, Stream, UserProfile
 
+from pydantic import BaseModel
+from typing import cast, Any, Callable
 
 from zerver.lib.event_types import (
     _allow_message_editing_data,
@@ -106,8 +108,9 @@ from zerver.lib.event_types import (
     web_reload_client_event,
 )
 
+EventModel = Any
 
-def validate_event_with_model_type(event, model):
+def validate_event_with_model_type(event: dict[str, object], model: EventModel) -> None:
     allowed_fields = set(model.__fields__.keys())
     if not set(event.keys()).issubset(allowed_fields):
         raise ValueError(f"Extra fields not allowed: {set(event.keys()) - allowed_fields}")
@@ -115,8 +118,8 @@ def validate_event_with_model_type(event, model):
     model.model_validate(event, strict=True)
 
 
-def make_checker(base_model):
-    def f(name, event):
+def make_checker(base_model: EventModel) -> Callable[[str, dict[str, object]], None]:
+    def f(name: str, event: dict[str, object]) -> None:
         # Note that we don't use `name` for debugging any more.
         validate_event_with_model_type(event, base_model)
 
@@ -212,7 +215,7 @@ _check_user_settings_update = make_checker(user_settings_update_event)
 _check_user_status = make_checker(user_status_event)
 
 
-PERSON_TYPES = dict(
+PERSON_TYPES : dict[str, EventModel] = dict(
     avatar_fields=_person_avatar_fields,
     bot_owner_id=_person_bot_owner_id,
     custom_profile_field=_person_custom_profile_field,
@@ -428,7 +431,7 @@ def check_realm_update_dict(
         assert isinstance(event["data"], dict)
 
         if "allow_message_editing" in event["data"]:
-            sub_type = _allow_message_editing_data
+            sub_type : EventModel = _allow_message_editing_data
         elif "message_content_edit_limit_seconds" in event["data"]:
             sub_type = _message_content_edit_limit_seconds_data
         elif "authentication_methods" in event["data"]:
@@ -451,7 +454,7 @@ def check_realm_update_dict(
     else:
         raise AssertionError("unhandled property: {event['property']}")
 
-    validate_event_with_model_type(event["data"], sub_type)
+    validate_event_with_model_type(cast(dict[str, object], event["data"]), sub_type)
 
 
 def check_realm_user_update(
@@ -463,7 +466,7 @@ def check_realm_user_update(
     _check_realm_user_update(var_name, event)
 
     sub_type = PERSON_TYPES[person_flavor]
-    validate_event_with_model_type(event["person"], sub_type)
+    validate_event_with_model_type(cast(dict[str, object], event["person"]), sub_type)
 
 
 def check_stream_update(
