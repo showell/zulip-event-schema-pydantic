@@ -13,7 +13,7 @@ def check_url(val: str) -> str:
     return val
 
 
-UrlType = Annotated[str, AfterValidator(check_url)]
+Url = Annotated[str, AfterValidator(check_url)]
 
 
 class alert_words_event(BaseModel):
@@ -309,7 +309,7 @@ class reaction_remove_event(BaseModel):
 
 
 class _bot_services_outgoing_type(BaseModel):
-    base_url: UrlType
+    base_url: Url
     interface: int
     token: str
 

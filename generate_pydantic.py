@@ -16,7 +16,7 @@ def check_url(val: str) -> str:
         raise AssertionError(f"{val} is not a URL")
     return val
 
-UrlType = Annotated[str, AfterValidator(check_url)]
+Url = Annotated[str, AfterValidator(check_url)]
 """
 )
 

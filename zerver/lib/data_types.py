@@ -193,7 +193,7 @@ class UnionType:
 
 class UrlType:
     def flat_name(self):
-        return "UrlType"
+        return "Url"
 
 def event_dict_type(
     required_keys: Sequence[tuple[str, Any]],
