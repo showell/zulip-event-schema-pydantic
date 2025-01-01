@@ -9,15 +9,15 @@ from collections.abc import Callable
 from typing import Any, cast
 
 from zerver.lib.event_types import (
-    _allow_message_editing_data,
-    _authentication_data,
-    _bot_services_embedded,
-    _bot_services_outgoing,
-    _group_setting_update_data,
-    _icon_data,
-    _logo_data,
-    _message_content_edit_limit_seconds_data,
-    _night_logo_data,
+    AllowMessageEditingData,
+    AuthenticationData,
+    BotServicesEmbedded,
+    BotServicesOutgoing,
+    GroupSettingUpdateData,
+    IconData,
+    LogoData,
+    MessageContentEditLimitSecondsData,
+    NightLogoData,
     _person_avatar_fields,
     _person_bot_owner_id,
     _person_custom_profile_field,
@@ -28,7 +28,7 @@ from zerver.lib.event_types import (
     _person_is_billing_admin,
     _person_role,
     _person_timezone,
-    _plan_type_data,
+    PlanTypeData,
     alert_words_event,
     attachment_add_event,
     attachment_remove_event,
@@ -303,10 +303,10 @@ def check_realm_bot_add(
         assert services == []
     elif bot_type == UserProfile.OUTGOING_WEBHOOK_BOT:
         assert len(services) == 1
-        validate_event_with_model_type(services[0], _bot_services_outgoing)
+        validate_event_with_model_type(services[0], BotServicesOutgoing)
     elif bot_type == UserProfile.EMBEDDED_BOT:
         assert len(services) == 1
-        validate_event_with_model_type(services[0], _bot_services_embedded)
+        validate_event_with_model_type(services[0], BotServicesEmbedded)
     else:
         raise AssertionError(f"Unknown bot_type: {bot_type}")
 
@@ -431,26 +431,26 @@ def check_realm_update_dict(
         assert isinstance(event["data"], dict)
 
         if "allow_message_editing" in event["data"]:
-            sub_type: EventModel = _allow_message_editing_data
+            sub_type: EventModel = AllowMessageEditingData
         elif "message_content_edit_limit_seconds" in event["data"]:
-            sub_type = _message_content_edit_limit_seconds_data
+            sub_type = MessageContentEditLimitSecondsData
         elif "authentication_methods" in event["data"]:
-            sub_type = _authentication_data
+            sub_type = AuthenticationData
         elif any(
             setting_name in event["data"] for setting_name in Realm.REALM_PERMISSION_GROUP_SETTINGS
         ):
-            sub_type = _group_setting_update_data
+            sub_type = GroupSettingUpdateData
         elif "plan_type" in event["data"]:
-            sub_type = _plan_type_data
+            sub_type = PlanTypeData
         else:
             raise AssertionError("unhandled fields in data")
 
     elif event["property"] == "icon":
-        sub_type = _icon_data
+        sub_type = IconData
     elif event["property"] == "logo":
-        sub_type = _logo_data
+        sub_type = LogoData
     elif event["property"] == "night_logo":
-        sub_type = _night_logo_data
+        sub_type = NightLogoData
     else:
         raise AssertionError("unhandled property: {event['property']}")
 
