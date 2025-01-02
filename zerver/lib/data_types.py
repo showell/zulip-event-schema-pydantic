@@ -168,7 +168,7 @@ class OptionalType:
     sub_type: Any
 
     def flat_name(self):
-        return f"Optional[{get_flat_name(self.sub_type)}]"
+        return f"{get_flat_name(self.sub_type)} | None"
 
 
 @dataclass

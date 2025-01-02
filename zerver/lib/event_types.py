@@ -132,7 +132,7 @@ class DirectMessageDisplayRecipient(BaseModel):
 
 
 class MessageFieldForEventDirectMessage(BaseModel):
-    avatar_url: Optional[str]
+    avatar_url: str | None
     client: str
     content: str
     content_type: Literal["text/html"]
@@ -210,7 +210,7 @@ class EventInvitesChanged(BaseModel):
 
 
 class MessageFieldForEventMessage(BaseModel):
-    avatar_url: Optional[str]
+    avatar_url: str | None
     client: str
     content: str
     content_type: Literal["text/html"]
@@ -325,8 +325,8 @@ class Bot(BaseModel):
     avatar_url: str
     bot_type: int
     default_all_public_streams: bool
-    default_events_register_stream: Optional[str]
-    default_sending_stream: Optional[str]
+    default_events_register_stream: str | None
+    default_sending_stream: str | None
     email: str
     full_name: str
     is_active: bool
@@ -361,8 +361,8 @@ class BotTypeForUpdate(BotTypeForUpdateCore):
     api_key: Optional[str] = None
     avatar_url: Optional[str] = None
     default_all_public_streams: Optional[bool] = None
-    default_events_register_stream: Optional[Optional[str]] = None
-    default_sending_stream: Optional[Optional[str]] = None
+    default_events_register_stream: Optional[str | None] = None
+    default_sending_stream: Optional[str | None] = None
     full_name: Optional[str] = None
     is_active: Optional[bool] = None
     owner_id: Optional[int] = None
@@ -415,7 +415,7 @@ class RealmEmoji(BaseModel):
     source_url: str
     deactivated: bool
     author_id: int
-    still_url: Optional[str]
+    still_url: str | None
 
 
 class EventRealmEmojiUpdate(BaseModel):
@@ -436,9 +436,9 @@ class Export(BaseModel):
     id: int
     export_time: float | int
     acting_user_id: int
-    export_url: Optional[str]
-    deleted_timestamp: Optional[float | int]
-    failed_timestamp: Optional[float | int]
+    export_url: str | None
+    deleted_timestamp: float | int | None
+    failed_timestamp: float | int | None
     pending: bool
     export_type: int
 
@@ -511,7 +511,7 @@ class LogoData(BaseModel):
 
 
 class MessageContentEditLimitSecondsData(BaseModel):
-    message_content_edit_limit_seconds: Optional[int]
+    message_content_edit_limit_seconds: int | None
 
 
 class NightLogoData(BaseModel):
@@ -544,7 +544,7 @@ class GroupSettingUpdateData(GroupSettingUpdateDataCore):
 
 class PlanTypeData(BaseModel):
     plan_type: int
-    upload_quota_mib: Optional[int]
+    upload_quota_mib: int | None
     max_file_upload_size_mib: int
 
 
@@ -576,7 +576,7 @@ class EventRealmUpdate(BaseModel):
 class RealmUser(BaseModel):
     user_id: int
     email: str
-    avatar_url: Optional[str]
+    avatar_url: str | None
     avatar_version: int
     full_name: str
     is_admin: bool
@@ -589,7 +589,7 @@ class RealmUser(BaseModel):
     profile_data: dict[str, dict[str, object]]
     timezone: str
     date_joined: str
-    delivery_email: Optional[str]
+    delivery_email: str | None
 
 
 class EventRealmUserAdd(BaseModel):
@@ -622,8 +622,8 @@ class EventRealmUserSettingsDefaultsUpdate(BaseModel):
 class PersonAvatarFields(BaseModel):
     user_id: int
     avatar_source: str
-    avatar_url: Optional[str]
-    avatar_url_medium: Optional[str]
+    avatar_url: str | None
+    avatar_url_medium: str | None
     avatar_version: int
 
 
@@ -634,7 +634,7 @@ class PersonBotOwnerId(BaseModel):
 
 class CustomProfileFieldCore(BaseModel):
     id: int
-    value: Optional[str]
+    value: str | None
 
 
 class CustomProfileField(CustomProfileFieldCore):
@@ -649,7 +649,7 @@ class PersonCustomProfileField(BaseModel):
 
 class PersonDeliveryEmail(BaseModel):
     user_id: int
-    delivery_email: Optional[str]
+    delivery_email: str | None
 
 
 class PersonEmail(BaseModel):
@@ -771,21 +771,21 @@ class BasicStreamFields(BaseModel):
     is_archived: bool
     can_administer_channel_group: int | AnonymousSettingGroupDict
     can_remove_subscribers_group: int | AnonymousSettingGroupDict
-    creator_id: Optional[int]
+    creator_id: int | None
     date_created: int
     description: str
-    first_message_id: Optional[int]
+    first_message_id: int | None
     is_recently_active: bool
     history_public_to_subscribers: bool
     invite_only: bool
     is_announcement_only: bool
     is_web_public: bool
-    message_retention_days: Optional[int]
+    message_retention_days: int | None
     name: str
     rendered_description: str
     stream_id: int
     stream_post_policy: int
-    stream_weekly_traffic: Optional[int]
+    stream_weekly_traffic: int | None
 
 
 class EventStreamCreate(BaseModel):
@@ -833,31 +833,31 @@ class SingleSubscription(BaseModel):
     is_archived: bool
     can_administer_channel_group: int | AnonymousSettingGroupDict
     can_remove_subscribers_group: int | AnonymousSettingGroupDict
-    creator_id: Optional[int]
+    creator_id: int | None
     date_created: int
     description: str
-    first_message_id: Optional[int]
+    first_message_id: int | None
     is_recently_active: bool
     history_public_to_subscribers: bool
     invite_only: bool
     is_announcement_only: bool
     is_web_public: bool
-    message_retention_days: Optional[int]
+    message_retention_days: int | None
     name: str
     rendered_description: str
     stream_id: int
     stream_post_policy: int
-    stream_weekly_traffic: Optional[int]
-    audible_notifications: Optional[bool]
+    stream_weekly_traffic: int | None
+    audible_notifications: bool | None
     color: str
-    desktop_notifications: Optional[bool]
-    email_notifications: Optional[bool]
+    desktop_notifications: bool | None
+    email_notifications: bool | None
     in_home_view: bool
     is_muted: bool
     pin_to_top: bool
-    push_notifications: Optional[bool]
+    push_notifications: bool | None
     subscribers: list[int]
-    wildcard_mentions_notify: Optional[bool]
+    wildcard_mentions_notify: bool | None
 
 
 class EventSubscriptionAdd(BaseModel):
@@ -962,7 +962,7 @@ class EventUpdateGlobalNotifications(BaseModel):
 
 class EventUpdateMessageCore(BaseModel):
     type: Literal["update_message"]
-    user_id: Optional[int]
+    user_id: int | None
     edit_timestamp: int
     message_id: int
     flags: list[str]
@@ -1028,8 +1028,8 @@ class EventUpdateMessageFlagsRemove(EventUpdateMessageFlagsRemoveCore):
 class Group(BaseModel):
     id: int
     name: str
-    creator_id: Optional[int]
-    date_created: Optional[int]
+    creator_id: int | None
+    date_created: int | None
     members: list[int]
     direct_subgroup_ids: list[int]
     description: str
