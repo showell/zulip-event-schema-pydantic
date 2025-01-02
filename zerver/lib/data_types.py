@@ -59,15 +59,15 @@ class DictType:
         # huge hack
         for key, data_type in self.required_keys:
             if key == "editable_by_user":
-                self._name = "_detailed_custom_profile"
+                self._name = "DetailedCustomProfile"
             if key == "direct_subgroups":
                 self._name = "AnonymousSettingGroupDict"
             if key == "stream_weekly_traffic":
-                self._name = "_basic_stream_fields"
+                self._name = "BasicStreamFields"
 
         for key, data_type in self.optional_keys:
             if key == "unmuted_stream_msg":
-                self._name = "_message_details"
+                self._name = "MessageDetails"
 
     def flat_name(self):
         return "Any"

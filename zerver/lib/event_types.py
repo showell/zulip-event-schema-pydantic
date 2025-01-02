@@ -64,7 +64,7 @@ class EventAttachmentUpdate(BaseModel):
     id: int
 
 
-class _detailed_custom_profileCore(BaseModel):
+class DetailedCustomProfileCore(BaseModel):
     id: int
     type: int
     name: str
@@ -75,14 +75,14 @@ class _detailed_custom_profileCore(BaseModel):
     editable_by_user: bool
 
 
-class _detailed_custom_profile(_detailed_custom_profileCore):
+class DetailedCustomProfile(DetailedCustomProfileCore):
     # TODO: fix types to avoid optional fields
     display_in_profile_summary: Optional[bool] = None
 
 
 class EventCustomProfileFields(BaseModel):
     type: Literal["custom_profile_fields"]
-    fields: List[_detailed_custom_profile]
+    fields: List[DetailedCustomProfile]
     id: int
 
 
@@ -767,7 +767,7 @@ class EventScheduledMessagesUpdate(BaseModel):
     id: int
 
 
-class _basic_stream_fields(BaseModel):
+class BasicStreamFields(BaseModel):
     is_archived: bool
     can_administer_channel_group: Union[int, AnonymousSettingGroupDict]
     can_remove_subscribers_group: Union[int, AnonymousSettingGroupDict]
@@ -791,14 +791,14 @@ class _basic_stream_fields(BaseModel):
 class EventStreamCreate(BaseModel):
     type: Literal["stream"]
     op: Literal["create"]
-    streams: List[_basic_stream_fields]
+    streams: List[BasicStreamFields]
     id: int
 
 
 class EventStreamDelete(BaseModel):
     type: Literal["stream"]
     op: Literal["delete"]
-    streams: List[_basic_stream_fields]
+    streams: List[BasicStreamFields]
     id: int
 
 
@@ -997,11 +997,11 @@ class EventUpdateMessageFlagsAdd(BaseModel):
     id: int
 
 
-class _message_detailsCore(BaseModel):
+class MessageDetailsCore(BaseModel):
     type: Literal["private", "stream"]
 
 
-class _message_details(_message_detailsCore):
+class MessageDetails(MessageDetailsCore):
     # TODO: fix types to avoid optional fields
     mentioned: Optional[bool] = None
     user_ids: Optional[List[int]] = None
@@ -1022,7 +1022,7 @@ class EventUpdateMessageFlagsRemoveCore(BaseModel):
 
 class EventUpdateMessageFlagsRemove(EventUpdateMessageFlagsRemoveCore):
     # TODO: fix types to avoid optional fields
-    message_details: Optional[dict[str, _message_details]] = None
+    message_details: Optional[dict[str, MessageDetails]] = None
 
 
 class Group(BaseModel):
