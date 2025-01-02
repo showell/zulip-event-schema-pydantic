@@ -2,8 +2,9 @@ from typing import Annotated, Literal
 
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
-from zerver.lib.types import AnonymousSettingGroupDict
 from pydantic import AfterValidator, BaseModel
+
+from zerver.lib.types import AnonymousSettingGroupDict
 
 
 def check_url(val: str) -> str:
