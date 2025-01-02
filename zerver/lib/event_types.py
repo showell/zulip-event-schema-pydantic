@@ -77,7 +77,7 @@ class DetailedCustomProfileCore(BaseModel):
 
 class DetailedCustomProfile(DetailedCustomProfileCore):
     # TODO: fix types to avoid optional fields
-    display_in_profile_summary: bool | None | None = None
+    display_in_profile_summary: bool | None = None
 
 
 class EventCustomProfileFields(BaseModel):
@@ -113,10 +113,10 @@ class EventDeleteMessageCore(BaseModel):
 
 class EventDeleteMessage(EventDeleteMessageCore):
     # TODO: fix types to avoid optional fields
-    message_id: int | None | None = None
-    message_ids: list[int] | None | None = None
-    stream_id: int | None | None = None
-    topic: str | None | None = None
+    message_id: int | None = None
+    message_ids: list[int] | None = None
+    stream_id: int | None = None
+    topic: str | None = None
 
 
 class TopicLink(BaseModel):
@@ -169,7 +169,7 @@ class DraftFieldsCore(BaseModel):
 
 class DraftFields(DraftFieldsCore):
     # TODO: fix types to avoid optional fields
-    timestamp: int | None | None = None
+    timestamp: int | None = None
 
 
 class EventDraftsAdd(BaseModel):
@@ -283,7 +283,7 @@ class EventPresenceCore(BaseModel):
 
 class EventPresence(EventPresenceCore):
     # TODO: fix types to avoid optional fields
-    email: str | None | None = None
+    email: str | None = None
 
 
 class EventReactionAdd(BaseModel):
@@ -358,15 +358,15 @@ class BotTypeForUpdateCore(BaseModel):
 
 class BotTypeForUpdate(BotTypeForUpdateCore):
     # TODO: fix types to avoid optional fields
-    api_key: str | None | None = None
-    avatar_url: str | None | None = None
-    default_all_public_streams: bool | None | None = None
-    default_events_register_stream: str | None | None = None
-    default_sending_stream: str | None | None = None
-    full_name: str | None | None = None
-    is_active: bool | None | None = None
-    owner_id: int | None | None = None
-    services: list[BotServicesOutgoing | BotServicesEmbedded] | None | None = None
+    api_key: str | None = None
+    avatar_url: str | None = None
+    default_all_public_streams: bool | None = None
+    default_events_register_stream: str | None = None
+    default_sending_stream: str | None = None
+    full_name: str | None = None
+    is_active: bool | None = None
+    owner_id: int | None = None
+    services: list[BotServicesOutgoing | BotServicesEmbedded] | None = None
 
 
 class EventRealmBotUpdate(BaseModel):
@@ -485,7 +485,7 @@ class AuthenticationMethodDictCore(BaseModel):
 
 class AuthenticationMethodDict(AuthenticationMethodDictCore):
     # TODO: fix types to avoid optional fields
-    unavailable_reason: str | None | None = None
+    unavailable_reason: str | None = None
 
 
 class AuthenticationDict(BaseModel):
@@ -525,21 +525,21 @@ class GroupSettingUpdateDataCore(BaseModel):
 
 class GroupSettingUpdateData(GroupSettingUpdateDataCore):
     # TODO: fix types to avoid optional fields
-    create_multiuse_invite_group: int | AnonymousSettingGroupDict | None | None = None
-    can_access_all_users_group: int | AnonymousSettingGroupDict | None | None = None
-    can_add_custom_emoji_group: int | AnonymousSettingGroupDict | None | None = None
-    can_create_groups: int | AnonymousSettingGroupDict | None | None = None
-    can_create_public_channel_group: int | AnonymousSettingGroupDict | None | None = None
-    can_create_private_channel_group: int | AnonymousSettingGroupDict | None | None = None
-    can_create_web_public_channel_group: int | AnonymousSettingGroupDict | None | None = None
-    can_delete_any_message_group: int | AnonymousSettingGroupDict | None | None = None
-    can_delete_own_message_group: int | AnonymousSettingGroupDict | None | None = None
-    can_invite_users_group: int | AnonymousSettingGroupDict | None | None = None
-    can_manage_all_groups: int | AnonymousSettingGroupDict | None | None = None
-    can_move_messages_between_channels_group: int | AnonymousSettingGroupDict | None | None = None
-    can_move_messages_between_topics_group: int | AnonymousSettingGroupDict | None | None = None
-    direct_message_initiator_group: int | AnonymousSettingGroupDict | None | None = None
-    direct_message_permission_group: int | AnonymousSettingGroupDict | None | None = None
+    create_multiuse_invite_group: int | AnonymousSettingGroupDict | None = None
+    can_access_all_users_group: int | AnonymousSettingGroupDict | None = None
+    can_add_custom_emoji_group: int | AnonymousSettingGroupDict | None = None
+    can_create_groups: int | AnonymousSettingGroupDict | None = None
+    can_create_public_channel_group: int | AnonymousSettingGroupDict | None = None
+    can_create_private_channel_group: int | AnonymousSettingGroupDict | None = None
+    can_create_web_public_channel_group: int | AnonymousSettingGroupDict | None = None
+    can_delete_any_message_group: int | AnonymousSettingGroupDict | None = None
+    can_delete_own_message_group: int | AnonymousSettingGroupDict | None = None
+    can_invite_users_group: int | AnonymousSettingGroupDict | None = None
+    can_manage_all_groups: int | AnonymousSettingGroupDict | None = None
+    can_move_messages_between_channels_group: int | AnonymousSettingGroupDict | None = None
+    can_move_messages_between_topics_group: int | AnonymousSettingGroupDict | None = None
+    direct_message_initiator_group: int | AnonymousSettingGroupDict | None = None
+    direct_message_permission_group: int | AnonymousSettingGroupDict | None = None
 
 
 class PlanTypeData(BaseModel):
@@ -639,7 +639,7 @@ class CustomProfileFieldCore(BaseModel):
 
 class CustomProfileField(CustomProfileFieldCore):
     # TODO: fix types to avoid optional fields
-    rendered_value: str | None | None = None
+    rendered_value: str | None = None
 
 
 class PersonCustomProfileField(BaseModel):
@@ -743,7 +743,7 @@ class ScheduledMessageFieldsCore(BaseModel):
 
 class ScheduledMessageFields(ScheduledMessageFieldsCore):
     # TODO: fix types to avoid optional fields
-    topic: str | None | None = None
+    topic: str | None = None
 
 
 class EventScheduledMessagesAdd(BaseModel):
@@ -814,9 +814,9 @@ class EventStreamUpdateCore(BaseModel):
 
 class EventStreamUpdate(EventStreamUpdateCore):
     # TODO: fix types to avoid optional fields
-    rendered_description: str | None | None = None
-    history_public_to_subscribers: bool | None | None = None
-    is_web_public: bool | None | None = None
+    rendered_description: str | None = None
+    history_public_to_subscribers: bool | None = None
+    is_web_public: bool | None = None
 
 
 class EventSubmessage(BaseModel):
@@ -919,9 +919,9 @@ class EventTypingStartCore(BaseModel):
 
 class EventTypingStart(EventTypingStartCore):
     # TODO: fix types to avoid optional fields
-    recipients: list[TypingPerson] | None | None = None
-    stream_id: int | None | None = None
-    topic: str | None | None = None
+    recipients: list[TypingPerson] | None = None
+    stream_id: int | None = None
+    topic: str | None = None
 
 
 class EventTypingStopCore(BaseModel):
@@ -934,9 +934,9 @@ class EventTypingStopCore(BaseModel):
 
 class EventTypingStop(EventTypingStopCore):
     # TODO: fix types to avoid optional fields
-    recipients: list[TypingPerson] | None | None = None
-    stream_id: int | None | None = None
-    topic: str | None | None = None
+    recipients: list[TypingPerson] | None = None
+    stream_id: int | None = None
+    topic: str | None = None
 
 
 class EventUpdateDisplaySettingsCore(BaseModel):
@@ -949,7 +949,7 @@ class EventUpdateDisplaySettingsCore(BaseModel):
 
 class EventUpdateDisplaySettings(EventUpdateDisplaySettingsCore):
     # TODO: fix types to avoid optional fields
-    language_name: str | None | None = None
+    language_name: str | None = None
 
 
 class EventUpdateGlobalNotifications(BaseModel):
@@ -973,18 +973,18 @@ class EventUpdateMessageCore(BaseModel):
 
 class EventUpdateMessage(EventUpdateMessageCore):
     # TODO: fix types to avoid optional fields
-    stream_id: int | None | None = None
-    stream_name: str | None | None = None
-    is_me_message: bool | None | None = None
-    orig_content: str | None | None = None
-    orig_rendered_content: str | None | None = None
-    content: str | None | None = None
-    rendered_content: str | None | None = None
-    topic_links: list[TopicLink] | None | None = None
-    subject: str | None | None = None
-    new_stream_id: int | None | None = None
-    propagate_mode: Literal["change_all", "change_later", "change_one"] | None | None = None
-    orig_subject: str | None | None = None
+    stream_id: int | None = None
+    stream_name: str | None = None
+    is_me_message: bool | None = None
+    orig_content: str | None = None
+    orig_rendered_content: str | None = None
+    content: str | None = None
+    rendered_content: str | None = None
+    topic_links: list[TopicLink] | None = None
+    subject: str | None = None
+    new_stream_id: int | None = None
+    propagate_mode: Literal["change_all", "change_later", "change_one"] | None = None
+    orig_subject: str | None = None
 
 
 class EventUpdateMessageFlagsAdd(BaseModel):
@@ -1003,11 +1003,11 @@ class MessageDetailsCore(BaseModel):
 
 class MessageDetails(MessageDetailsCore):
     # TODO: fix types to avoid optional fields
-    mentioned: bool | None | None = None
-    user_ids: list[int] | None | None = None
-    stream_id: int | None | None = None
-    topic: str | None | None = None
-    unmuted_stream_msg: bool | None | None = None
+    mentioned: bool | None = None
+    user_ids: list[int] | None = None
+    stream_id: int | None = None
+    topic: str | None = None
+    unmuted_stream_msg: bool | None = None
 
 
 class EventUpdateMessageFlagsRemoveCore(BaseModel):
@@ -1022,7 +1022,7 @@ class EventUpdateMessageFlagsRemoveCore(BaseModel):
 
 class EventUpdateMessageFlagsRemove(EventUpdateMessageFlagsRemoveCore):
     # TODO: fix types to avoid optional fields
-    message_details: dict[str, MessageDetails] | None | None = None
+    message_details: dict[str, MessageDetails] | None = None
 
 
 class Group(BaseModel):
@@ -1095,15 +1095,15 @@ class UserGroupDataCore(BaseModel):
 
 class UserGroupData(UserGroupDataCore):
     # TODO: fix types to avoid optional fields
-    name: str | None | None = None
-    description: str | None | None = None
-    can_add_members_group: int | AnonymousSettingGroupDict | None | None = None
-    can_join_group: int | AnonymousSettingGroupDict | None | None = None
-    can_leave_group: int | AnonymousSettingGroupDict | None | None = None
-    can_manage_group: int | AnonymousSettingGroupDict | None | None = None
-    can_mention_group: int | AnonymousSettingGroupDict | None | None = None
-    can_remove_members_group: int | AnonymousSettingGroupDict | None | None = None
-    deactivated: bool | None | None = None
+    name: str | None = None
+    description: str | None = None
+    can_add_members_group: int | AnonymousSettingGroupDict | None = None
+    can_join_group: int | AnonymousSettingGroupDict | None = None
+    can_leave_group: int | AnonymousSettingGroupDict | None = None
+    can_manage_group: int | AnonymousSettingGroupDict | None = None
+    can_mention_group: int | AnonymousSettingGroupDict | None = None
+    can_remove_members_group: int | AnonymousSettingGroupDict | None = None
+    deactivated: bool | None = None
 
 
 class EventUserGroupUpdate(BaseModel):
@@ -1124,7 +1124,7 @@ class EventUserSettingsUpdateCore(BaseModel):
 
 class EventUserSettingsUpdate(EventUserSettingsUpdateCore):
     # TODO: fix types to avoid optional fields
-    language_name: str | None | None = None
+    language_name: str | None = None
 
 
 class EventUserStatusCore(BaseModel):
@@ -1135,11 +1135,11 @@ class EventUserStatusCore(BaseModel):
 
 class EventUserStatus(EventUserStatusCore):
     # TODO: fix types to avoid optional fields
-    away: bool | None | None = None
-    status_text: str | None | None = None
-    emoji_name: str | None | None = None
-    emoji_code: str | None | None = None
-    reaction_type: Literal["realm_emoji", "unicode_emoji", "zulip_extra_emoji"] | None | None = None
+    away: bool | None = None
+    status_text: str | None = None
+    emoji_name: str | None = None
+    emoji_code: str | None = None
+    reaction_type: Literal["realm_emoji", "unicode_emoji", "zulip_extra_emoji"] | None = None
 
 
 class EventUserTopic(BaseModel):

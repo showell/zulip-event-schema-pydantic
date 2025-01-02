@@ -109,7 +109,7 @@ class DictType:
                 flat_name = get_flat_name(data_type)
                 if "| None" not in flat_name:
                     flat_name += " | None"
-                s += f"    {key}: {flat_name} | None = None\n"
+                s += f"    {key}: {flat_name} = None\n"
             s += "\n\n"
             print(s)
 
