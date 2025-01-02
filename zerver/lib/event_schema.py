@@ -101,7 +101,6 @@ from zerver.lib.event_types import (
     EventUserSettingsUpdate,
     EventUserStatus,
     EventUserTopic,
-    EventWebReloadClient,
 )
 from zerver.lib.topic import ORIG_TOPIC, TOPIC_NAME
 from zerver.lib.types import AnonymousSettingGroupDict
@@ -179,7 +178,6 @@ check_user_group_remove = make_checker(EventUserGroupRemove)
 check_user_group_remove_members = make_checker(EventUserGroupRemoveMembers)
 check_user_group_remove_subgroups = make_checker(EventUserGroupRemoveSubgroups)
 check_user_topic = make_checker(EventUserTopic)
-check_EventWebReloadClient = make_checker(EventWebReloadClient)
 
 
 # Now for the slightly more tricky bits.  All the following functions
