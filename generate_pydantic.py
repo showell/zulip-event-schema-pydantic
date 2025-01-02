@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 from zerver.lib.types import AnonymousSettingGroupDict
 from pydantic import AfterValidator, BaseModel
-from typing import Annotated, Literal, Tuple, Optional
+from typing import Annotated, Literal, Tuple
 
 def check_url(val: str) -> str:
     try:

@@ -106,7 +106,7 @@ class DictType:
             s = f"\nclass {name}({superclass}):\n"
             s += "\n    # TODO: fix types to avoid optional fields\n"
             for key, data_type in self.optional_keys:
-                s += f"    {key}: Optional[{get_flat_name(data_type)}] = None\n"
+                s += f"    {key}: {get_flat_name(data_type)} | None = None\n"
             s += "\n\n"
             print(s)
 
