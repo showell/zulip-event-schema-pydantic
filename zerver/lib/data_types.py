@@ -84,9 +84,7 @@ class DictType:
             get_flat_name(data_type)
 
         if self.optional_keys:
-            superclass = name + "_core"
-            if not superclass.startswith("_"):
-                superclass = "_" + superclass
+            superclass = name + "Core"
         else:
             superclass = name
 

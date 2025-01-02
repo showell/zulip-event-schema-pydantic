@@ -45,7 +45,17 @@ for k in module_dict:
         if not getattr(v, "__is_for_checker", False):
             v._name = fix_name(k)
 
+code = open("zerver/lib/event_schema.py").read()
+
 for k in sorted(module_dict):
     if k.endswith("_event") and not k.startswith("check_"):
         schema = module_dict[k]
+        orig_name = k
+        k = k.strip("_")
+        k = k.replace("_event", "")
+        k = k.replace('_', ' ').strip().title().replace(' ', '')
+        k = "Event" + k
+        code = code.replace(orig_name, k)
         schema.print_full_pydantic(name=k)
+
+open("zerver/lib/event_schema.py", "w").write(code)
