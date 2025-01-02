@@ -111,7 +111,7 @@ EventModel = Any
 
 
 def validate_event_with_model_type(event: dict[str, object], model: EventModel) -> None:
-    allowed_fields = set(model.__fields__.keys())
+    allowed_fields = set(model.model_fields.keys())
     if not set(event.keys()).issubset(allowed_fields):
         raise ValueError(f"Extra fields not allowed: {set(event.keys()) - allowed_fields}")
 
