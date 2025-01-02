@@ -95,7 +95,8 @@ class DictType:
 
         for key, data_type in self.required_keys:
             if type(data_type) is DictType and not hasattr(data_type, "_name"):
-                data_type._name = "_" + name + "__" + key
+                k = key.title() + "FieldFor" + name
+                data_type._name = k
             s += f"    {key}: {get_flat_name(data_type)}\n"
         s += "\n\n"
 

@@ -44,14 +44,14 @@ class EventAttachmentAdd(BaseModel):
     id: int
 
 
-class _EventAttachmentRemove__attachment(BaseModel):
+class AttachmentFieldForEventAttachmentRemove(BaseModel):
     id: int
 
 
 class EventAttachmentRemove(BaseModel):
     type: Literal["attachment"]
     op: Literal["remove"]
-    attachment: _EventAttachmentRemove__attachment
+    attachment: AttachmentFieldForEventAttachmentRemove
     upload_space_used: int
     id: int
 
@@ -131,7 +131,7 @@ class DirectMessageDisplayRecipient(BaseModel):
     full_name: str
 
 
-class _EventDirectMessage__message(BaseModel):
+class MessageFieldForEventDirectMessage(BaseModel):
     avatar_url: Optional[str]
     client: str
     content: str
@@ -155,7 +155,7 @@ class _EventDirectMessage__message(BaseModel):
 class EventDirectMessage(BaseModel):
     type: Literal["message"]
     flags: List[str]
-    message: _EventDirectMessage__message
+    message: MessageFieldForEventDirectMessage
     id: int
 
 
@@ -209,7 +209,7 @@ class EventInvitesChanged(BaseModel):
     id: int
 
 
-class _EventMessage__message(BaseModel):
+class MessageFieldForEventMessage(BaseModel):
     avatar_url: Optional[str]
     client: str
     content: str
@@ -234,7 +234,7 @@ class _EventMessage__message(BaseModel):
 class EventMessage(BaseModel):
     type: Literal["message"]
     flags: List[str]
-    message: _EventMessage__message
+    message: MessageFieldForEventMessage
     id: int
 
 
