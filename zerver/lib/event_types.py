@@ -2,7 +2,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 from zerver.lib.types import AnonymousSettingGroupDict
 from pydantic import AfterValidator, BaseModel
-from typing import Annotated, List, Literal, Tuple, Optional, Union
+from typing import Annotated, List, Literal, Tuple, Optional
 
 
 def check_url(val: str) -> str:
@@ -276,7 +276,7 @@ class Presence(BaseModel):
 class EventPresenceCore(BaseModel):
     type: Literal["presence"]
     user_id: int
-    server_timestamp: Union[float, int]
+    server_timestamp: float | int
     presence: dict[str, Presence]
     id: int
 
@@ -331,7 +331,7 @@ class Bot(BaseModel):
     full_name: str
     is_active: bool
     owner_id: int
-    services: List[Union[BotServicesOutgoing, BotServicesEmbedded]]
+    services: List[BotServicesOutgoing | BotServicesEmbedded]
 
 
 class EventRealmBotAdd(BaseModel):
@@ -366,7 +366,7 @@ class BotTypeForUpdate(BotTypeForUpdateCore):
     full_name: Optional[str] = None
     is_active: Optional[bool] = None
     owner_id: Optional[int] = None
-    services: Optional[List[Union[BotServicesOutgoing, BotServicesEmbedded]]] = None
+    services: Optional[List[BotServicesOutgoing | BotServicesEmbedded]] = None
 
 
 class EventRealmBotUpdate(BaseModel):
@@ -434,11 +434,11 @@ class EventRealmExportConsent(BaseModel):
 
 class Export(BaseModel):
     id: int
-    export_time: Union[float, int]
+    export_time: float | int
     acting_user_id: int
     export_url: Optional[str]
-    deleted_timestamp: Optional[Union[float, int]]
-    failed_timestamp: Optional[Union[float, int]]
+    deleted_timestamp: Optional[float | int]
+    failed_timestamp: Optional[float | int]
     pending: bool
     export_type: int
 
@@ -525,21 +525,21 @@ class GroupSettingUpdateDataCore(BaseModel):
 
 class GroupSettingUpdateData(GroupSettingUpdateDataCore):
     # TODO: fix types to avoid optional fields
-    create_multiuse_invite_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
-    can_access_all_users_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
-    can_add_custom_emoji_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
-    can_create_groups: Optional[Union[int, AnonymousSettingGroupDict]] = None
-    can_create_public_channel_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
-    can_create_private_channel_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
-    can_create_web_public_channel_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
-    can_delete_any_message_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
-    can_delete_own_message_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
-    can_invite_users_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
-    can_manage_all_groups: Optional[Union[int, AnonymousSettingGroupDict]] = None
-    can_move_messages_between_channels_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
-    can_move_messages_between_topics_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
-    direct_message_initiator_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
-    direct_message_permission_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
+    create_multiuse_invite_group: Optional[int | AnonymousSettingGroupDict] = None
+    can_access_all_users_group: Optional[int | AnonymousSettingGroupDict] = None
+    can_add_custom_emoji_group: Optional[int | AnonymousSettingGroupDict] = None
+    can_create_groups: Optional[int | AnonymousSettingGroupDict] = None
+    can_create_public_channel_group: Optional[int | AnonymousSettingGroupDict] = None
+    can_create_private_channel_group: Optional[int | AnonymousSettingGroupDict] = None
+    can_create_web_public_channel_group: Optional[int | AnonymousSettingGroupDict] = None
+    can_delete_any_message_group: Optional[int | AnonymousSettingGroupDict] = None
+    can_delete_own_message_group: Optional[int | AnonymousSettingGroupDict] = None
+    can_invite_users_group: Optional[int | AnonymousSettingGroupDict] = None
+    can_manage_all_groups: Optional[int | AnonymousSettingGroupDict] = None
+    can_move_messages_between_channels_group: Optional[int | AnonymousSettingGroupDict] = None
+    can_move_messages_between_topics_group: Optional[int | AnonymousSettingGroupDict] = None
+    direct_message_initiator_group: Optional[int | AnonymousSettingGroupDict] = None
+    direct_message_permission_group: Optional[int | AnonymousSettingGroupDict] = None
 
 
 class PlanTypeData(BaseModel):
@@ -552,16 +552,16 @@ class EventRealmUpdateDict(BaseModel):
     type: Literal["realm"]
     op: Literal["update_dict"]
     property: Literal["default", "icon", "logo", "night_logo"]
-    data: Union[
-        AllowMessageEditingData,
-        AuthenticationData,
-        IconData,
-        LogoData,
-        MessageContentEditLimitSecondsData,
-        NightLogoData,
-        GroupSettingUpdateData,
-        PlanTypeData,
-    ]
+    data: (
+        AllowMessageEditingData
+        | AuthenticationData
+        | IconData
+        | LogoData
+        | MessageContentEditLimitSecondsData
+        | NightLogoData
+        | GroupSettingUpdateData
+        | PlanTypeData
+    )
     id: int
 
 
@@ -569,7 +569,7 @@ class EventRealmUpdate(BaseModel):
     type: Literal["realm"]
     op: Literal["update"]
     property: str
-    value: Union[bool, int, str]
+    value: bool | int | str
     id: int
 
 
@@ -615,7 +615,7 @@ class EventRealmUserSettingsDefaultsUpdate(BaseModel):
     type: Literal["realm_user_settings_defaults"]
     op: Literal["update"]
     property: str
-    value: Union[bool, int, str]
+    value: bool | int | str
     id: int
 
 
@@ -686,18 +686,18 @@ class PersonIsActive(BaseModel):
 class EventRealmUserUpdate(BaseModel):
     type: Literal["realm_user"]
     op: Literal["update"]
-    person: Union[
-        PersonAvatarFields,
-        PersonBotOwnerId,
-        PersonCustomProfileField,
-        PersonDeliveryEmail,
-        PersonEmail,
-        PersonFullName,
-        PersonIsBillingAdmin,
-        PersonRole,
-        PersonTimezone,
-        PersonIsActive,
-    ]
+    person: (
+        PersonAvatarFields
+        | PersonBotOwnerId
+        | PersonCustomProfileField
+        | PersonDeliveryEmail
+        | PersonEmail
+        | PersonFullName
+        | PersonIsBillingAdmin
+        | PersonRole
+        | PersonTimezone
+        | PersonIsActive
+    )
     id: int
 
 
@@ -734,7 +734,7 @@ class EventSavedSnippetRemove(BaseModel):
 class ScheduledMessageFieldsCore(BaseModel):
     scheduled_message_id: int
     type: Literal["private", "stream"]
-    to: Union[List[int], int]
+    to: List[int] | int
     content: str
     rendered_content: str
     scheduled_delivery_timestamp: int
@@ -769,8 +769,8 @@ class EventScheduledMessagesUpdate(BaseModel):
 
 class BasicStreamFields(BaseModel):
     is_archived: bool
-    can_administer_channel_group: Union[int, AnonymousSettingGroupDict]
-    can_remove_subscribers_group: Union[int, AnonymousSettingGroupDict]
+    can_administer_channel_group: int | AnonymousSettingGroupDict
+    can_remove_subscribers_group: int | AnonymousSettingGroupDict
     creator_id: Optional[int]
     date_created: int
     description: str
@@ -806,7 +806,7 @@ class EventStreamUpdateCore(BaseModel):
     type: Literal["stream"]
     op: Literal["update"]
     property: str
-    value: Union[bool, int, str, AnonymousSettingGroupDict, Literal[None]]
+    value: bool | int | str | AnonymousSettingGroupDict | Literal[None]
     name: str
     stream_id: int
     id: int
@@ -831,8 +831,8 @@ class EventSubmessage(BaseModel):
 
 class SingleSubscription(BaseModel):
     is_archived: bool
-    can_administer_channel_group: Union[int, AnonymousSettingGroupDict]
-    can_remove_subscribers_group: Union[int, AnonymousSettingGroupDict]
+    can_administer_channel_group: int | AnonymousSettingGroupDict
+    can_remove_subscribers_group: int | AnonymousSettingGroupDict
     creator_id: Optional[int]
     date_created: int
     description: str
@@ -900,7 +900,7 @@ class EventSubscriptionUpdate(BaseModel):
     op: Literal["update"]
     property: str
     stream_id: int
-    value: Union[bool, int, str]
+    value: bool | int | str
     id: int
 
 
@@ -942,7 +942,7 @@ class EventTypingStop(EventTypingStopCore):
 class EventUpdateDisplaySettingsCore(BaseModel):
     type: Literal["update_display_settings"]
     setting_name: str
-    setting: Union[bool, int, str]
+    setting: bool | int | str
     user: str
     id: int
 
@@ -955,7 +955,7 @@ class EventUpdateDisplaySettings(EventUpdateDisplaySettingsCore):
 class EventUpdateGlobalNotifications(BaseModel):
     type: Literal["update_global_notifications"]
     notification_name: str
-    setting: Union[bool, int, str]
+    setting: bool | int | str
     user: str
     id: int
 
@@ -1034,12 +1034,12 @@ class Group(BaseModel):
     direct_subgroup_ids: List[int]
     description: str
     is_system_group: bool
-    can_add_members_group: Union[int, AnonymousSettingGroupDict]
-    can_join_group: Union[int, AnonymousSettingGroupDict]
-    can_leave_group: Union[int, AnonymousSettingGroupDict]
-    can_manage_group: Union[int, AnonymousSettingGroupDict]
-    can_mention_group: Union[int, AnonymousSettingGroupDict]
-    can_remove_members_group: Union[int, AnonymousSettingGroupDict]
+    can_add_members_group: int | AnonymousSettingGroupDict
+    can_join_group: int | AnonymousSettingGroupDict
+    can_leave_group: int | AnonymousSettingGroupDict
+    can_manage_group: int | AnonymousSettingGroupDict
+    can_mention_group: int | AnonymousSettingGroupDict
+    can_remove_members_group: int | AnonymousSettingGroupDict
     deactivated: bool
 
 
@@ -1097,12 +1097,12 @@ class UserGroupData(UserGroupDataCore):
     # TODO: fix types to avoid optional fields
     name: Optional[str] = None
     description: Optional[str] = None
-    can_add_members_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
-    can_join_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
-    can_leave_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
-    can_manage_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
-    can_mention_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
-    can_remove_members_group: Optional[Union[int, AnonymousSettingGroupDict]] = None
+    can_add_members_group: Optional[int | AnonymousSettingGroupDict] = None
+    can_join_group: Optional[int | AnonymousSettingGroupDict] = None
+    can_leave_group: Optional[int | AnonymousSettingGroupDict] = None
+    can_manage_group: Optional[int | AnonymousSettingGroupDict] = None
+    can_mention_group: Optional[int | AnonymousSettingGroupDict] = None
+    can_remove_members_group: Optional[int | AnonymousSettingGroupDict] = None
     deactivated: Optional[bool] = None
 
 
@@ -1118,7 +1118,7 @@ class EventUserSettingsUpdateCore(BaseModel):
     type: Literal["user_settings"]
     op: Literal["update"]
     property: str
-    value: Union[bool, int, str]
+    value: bool | int | str
     id: int
 
 

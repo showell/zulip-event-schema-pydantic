@@ -13,22 +13,6 @@ from zerver.lib.event_types import (
     AuthenticationData,
     BotServicesEmbedded,
     BotServicesOutgoing,
-    GroupSettingUpdateData,
-    IconData,
-    LogoData,
-    MessageContentEditLimitSecondsData,
-    NightLogoData,
-    PersonAvatarFields,
-    PersonBotOwnerId,
-    PersonCustomProfileField,
-    PersonDeliveryEmail,
-    PersonEmail,
-    PersonFullName,
-    PersonIsActive,
-    PersonIsBillingAdmin,
-    PersonRole,
-    PersonTimezone,
-    PlanTypeData,
     EventAlertWords,
     EventAttachmentAdd,
     EventAttachmentRemove,
@@ -59,12 +43,12 @@ from zerver.lib.event_types import (
     EventRealmDomainsChange,
     EventRealmDomainsRemove,
     EventRealmEmojiUpdate,
-    EventRealmExportConsent,
     EventRealmExport,
+    EventRealmExportConsent,
     EventRealmLinkifiers,
     EventRealmPlaygrounds,
-    EventRealmUpdateDict,
     EventRealmUpdate,
+    EventRealmUpdateDict,
     EventRealmUserAdd,
     EventRealmUserRemove,
     EventRealmUserSettingsDefaultsUpdate,
@@ -101,6 +85,23 @@ from zerver.lib.event_types import (
     EventUserSettingsUpdate,
     EventUserStatus,
     EventUserTopic,
+    EventWebReloadClient,
+    GroupSettingUpdateData,
+    IconData,
+    LogoData,
+    MessageContentEditLimitSecondsData,
+    NightLogoData,
+    PersonAvatarFields,
+    PersonBotOwnerId,
+    PersonCustomProfileField,
+    PersonDeliveryEmail,
+    PersonEmail,
+    PersonFullName,
+    PersonIsActive,
+    PersonIsBillingAdmin,
+    PersonRole,
+    PersonTimezone,
+    PlanTypeData,
 )
 from zerver.lib.topic import ORIG_TOPIC, TOPIC_NAME
 from zerver.lib.types import AnonymousSettingGroupDict
@@ -154,7 +155,7 @@ check_realm_linkifiers = make_checker(EventRealmLinkifiers)
 check_realm_playgrounds = make_checker(EventRealmPlaygrounds)
 check_realm_user_add = make_checker(EventRealmUserAdd)
 check_realm_user_remove = make_checker(EventRealmUserRemove)
-check_EventRestart = make_checker(EventRestart)
+check_restart = make_checker(EventRestart)
 check_saved_snippet_add = make_checker(EventSavedSnippetAdd)
 check_saved_snippet_remove = make_checker(EventSavedSnippetRemove)
 check_scheduled_message_add = make_checker(EventScheduledMessagesAdd)
@@ -178,6 +179,7 @@ check_user_group_remove = make_checker(EventUserGroupRemove)
 check_user_group_remove_members = make_checker(EventUserGroupRemoveMembers)
 check_user_group_remove_subgroups = make_checker(EventUserGroupRemoveSubgroups)
 check_user_topic = make_checker(EventUserTopic)
+check_web_reload_client_event = make_checker(EventWebReloadClient)
 
 
 # Now for the slightly more tricky bits.  All the following functions

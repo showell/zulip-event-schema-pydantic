@@ -140,7 +140,7 @@ class NumberType:
     OpenAPI, because isinstance(4, float) == False"""
 
     def flat_name(self):
-        return "Union[float, int]"
+        return "float | int"
 
 class ListType:
     """List with every object having the declared sub_type."""
@@ -188,7 +188,7 @@ class UnionType:
 
     def flat_name(self):
         sub_names = [get_flat_name(t) for t in self.sub_types]
-        return f"Union[{", ".join(sub_names)}]"
+        return f"{"| ".join(sub_names)}"
 
 class UrlType:
     def flat_name(self):
