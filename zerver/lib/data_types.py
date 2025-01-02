@@ -183,7 +183,7 @@ class TupleType:
 
     def flat_name(self):
         sub_names = [get_flat_name(t) for t in self.sub_types]
-        return f"Tuple[{", ".join(sub_names)}]"
+        return f"tuple[{", ".join(sub_names)}]"
 
 @dataclass
 class UnionType:
