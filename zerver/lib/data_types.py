@@ -150,7 +150,7 @@ class ListType:
         self.length = length
 
     def flat_name(self):
-        return f"List[{get_flat_name(self.sub_type)}]"
+        return f"list[{get_flat_name(self.sub_type)}]"
 
 
 @dataclass
